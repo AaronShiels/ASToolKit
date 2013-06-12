@@ -15,12 +15,11 @@ namespace AS.ToolKit.Web {
         protected void Application_Start() {
             AreaRegistration.RegisterAllAreas();
 
-            CompositionConfig.Configure();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+            CompositionConfig.Configure();
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Composition.Convention;
 using System.Composition.Hosting;
-using Alt.Composition;
 using Alt.Composition.Convention;
 using Alt.Composition.Hosting;
 
