@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Alt.Composition.Web</id>
+    <version>1.1.13</version>
+    <title>Alt.Composition.Web</title>
+    <authors>Alt.Composition Contributors</authors>
+    <owners>Alt.Composition Contributors</owners>
+    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+    <projectUrl>https://github.com/nblumhardt/alt-composition/</projectUrl>
+    <iconUrl>http://nblumhardt.github.io/alt-composition/images/alt-composition-64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Implements an opinionated 'parts folder' model out of the box for
+                 ASP.NET MVC and WebAPI applications.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>MEF Composition IoC Dependency Injection</tags>
+    <dependencies>
+      <dependency id="Microsoft.Composition" version="1.0.0" />
+      <dependency id="Alt.Composition.Web.Mvc" />
+      <dependency id="Alt.Composition.Extended" />
+      <dependency id="Alt.Composition.Settings" />
+    </dependencies>
+    <references>
+      <reference file="Alt.Composition.Web.dll" />
+    </references>
+  </metadata>
+</package>
