@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Composition.Convention;
 using System.Composition.Hosting;
 using Alt.Composition.Convention;
 using Alt.Composition.Hosting;
 
-namespace AS.ToolKit.Web
+namespace AS.ToolKit.Web.App_Start
 {
     public class CompositionConfig
     {
@@ -19,6 +15,7 @@ namespace AS.ToolKit.Web
 
             var container = new ContainerConfiguration()
             .WithDefaultConventions(conventions)
+            .WithApplicationSettings()
             .WithAssembly(typeof(MvcApplication).Assembly)
             .CreateContainer();
 

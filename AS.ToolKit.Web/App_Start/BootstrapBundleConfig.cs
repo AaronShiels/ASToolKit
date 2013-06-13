@@ -1,8 +1,9 @@
 using System.Web.Optimization;
+using AS.ToolKit.Web.App_Start;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(AS.ToolKit.Web.BootstrapBundleConfig), "RegisterBundles")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(BootstrapBundleConfig), "RegisterBundles")]
 
-namespace AS.ToolKit.Web
+namespace AS.ToolKit.Web.App_Start
 {
 	public class BootstrapBundleConfig
 	{

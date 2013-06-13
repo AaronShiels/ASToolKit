@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Alt.Composition.Settings</id>
+    <version>1.1.13</version>
+    <title>Alt.Composition.Settings</title>
+    <authors>Alt.Composition Contributors</authors>
+    <owners>Alt.Composition Contributors</owners>
+    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+    <projectUrl>https://github.com/nblumhardt/alt-composition/</projectUrl>
+    <iconUrl>http://nblumhardt.github.io/alt-composition/images/alt-composition-64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Allows parts written for System.Composition to consume settings from *.config files.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>MEF Composition IoC Dependency Injection</tags>
+    <dependencies>
+      <dependency id="Microsoft.Composition" version="1.0.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.5" />
+    </frameworkAssemblies>
+    <references>
+      <reference file="Alt.Composition.Settings.dll" />
+    </references>
+  </metadata>
+</package>
