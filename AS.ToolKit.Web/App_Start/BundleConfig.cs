@@ -14,7 +14,30 @@ namespace AS.ToolKit.Web.App_Start {
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                "~/Scripts/bootstrap.js",
+                "~/Scripts/bootstrap-datepicker.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/bootmetro").Include(
+                "~/Scripts/bootmetro.js",
+                "~/Scripts/bootmetro-charms.js"
+                ));
+
+            bundles.Add(new StyleBundle("~/Content/styles").Include(
+                "~/Content/css/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
+                "~/Content/css/bootstrap.css",
+                "~/Content/css/bootstrap-responsive.css"));
+
+            bundles.Add(new StyleBundle("~/Content/bootmetro").Include(
+                "~/Content/css/bootmetro.css",
+                "~/Content/css/bootmetro-tiles.css",
+                "~/Content/css/bootmetro-charms.css",
+                "~/Content/css/metro-ui-dark.css",
+                "~/Content/css/icomoon.css",
+                "~/Content/css/datepicker.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",

@@ -1,6 +1,17 @@
 ﻿@{
-    Layout = "_HomeLayout.cshtml";
     ViewBag.Title = "Home";
 }
 
-<h2>Hello world</h2>
+<div class="container-fluid metro">
+    <div class="row-fluid">
+        <div class="span12">
+            <a class="tile wide app" href="@Url.Action("Index", "Shopping")">
+                <div class="image-wrapper">
+                    <img src="/Content/img/ShoppingLogo.png" alt=""/>
+                </div>
+                <div class="app-label">Shopping Calculator</div>
+                <div class="app-count"></div>
+            </a>
+        </div>
+    </div>
+</div>
