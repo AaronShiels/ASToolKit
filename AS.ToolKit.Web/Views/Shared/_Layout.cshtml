@@ -4,12 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+    @Styles.Render("~/Content/site")
+    @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/bootmetro")
 </head>
-<body>
-    @RenderBody()
-
-    @Scripts.Render("~/bundles/jquery")
-    @RenderSection("scripts", required: false)
-</body>
+    <body>
+        <header id="nav-bar" class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="header-container">
+                        <h5>ToolKit</h5>
+                        <div class="dropdown">
+                            <a class="header-dropdown dropdown-toggle accent-color" data-toggle="dropdown" href="#">
+                                @ViewBag.Title
+                                <i class="caret"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="top-info" class="pull-right">
+                        <div class="top-info-block">
+                           <h3>Guest</h3>
+                            <h4>User</h4> 
+                        </div>
+                        <div class="top-info-block">
+                            <b class="icon-user"></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/bootmetro")
+        @RenderSection("scripts", required: false)
+    </body>
 </html>
