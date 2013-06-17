@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Shopping Calculator";
+}
+
+@model IEnumerable<AS.ToolKit.Web.Models.ShoppingPeriod>
+
+<div class="container-fluid metro">
+    <div class="row-fluid">
+        <div class="span12">
+            @foreach (var period in Model)
+            {
+              <a class="tile wide text" href="@Url.Action("Groups", "Shopping", new {periodId = period.Id})">
+                  <div class="text-header">@period.End.ToString("MMMM yyyy")</div>
+                  <div class="text"></div>
+                  <div class="text">@period.Start.ToString("dd MMMM") - @period.End.ToString("dd MMMM")</div>
+            </a>   
+            }
+        </div>
+    </div>
+</div>
