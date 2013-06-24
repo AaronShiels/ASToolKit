@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
-    @Styles.Render("~/Content/site")
     @Styles.Render("~/Content/bootstrap")
     @Styles.Render("~/Content/bootmetro")
+    @Styles.Render("~/Content/styles")
 </head>
     <body>
         <header id="nav-bar" class="container-fluid">
@@ -21,20 +21,20 @@
                                 <i class="caret"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Shopping Calculator", "Periods", "Shopping")</li>
+                                <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             </ul>
                         </div>
                     </div>
                     <div id="top-info" class="pull-right">
-                        <div class="top-info-block">
-                           <h3>Guest</h3>
+                        <div class="pull-left">
+                            <h3>Guest</h3>
                             <h4>User</h4> 
                         </div>
-                        <div class="top-info-block">
-                            <b class="icon-user"></b>
-                        </div>
+                        <a href="#" class="win-command">
+                           <span class="win-commandicon win-commandring icon-user"></span>
+                        </a>
                     </div>
                 </div>
             </div>

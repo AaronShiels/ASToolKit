@@ -20,7 +20,8 @@ namespace AS.ToolKit.Web.App_Start {
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootmetro").Include(
-                "~/Scripts/bootmetro.js",
+                "~/Scripts/bootmetro-panorama.js",
+                "~/Scripts/bootmetro-pivot.js",
                 "~/Scripts/bootmetro-charms.js"
                 ));
 
@@ -33,25 +34,10 @@ namespace AS.ToolKit.Web.App_Start {
 
             bundles.Add(new StyleBundle("~/Content/bootmetro").Include(
                 "~/Content/css/bootmetro.css",
-                "~/Content/css/bootmetro-tiles.css",
-                "~/Content/css/bootmetro-charms.css",
-                "~/Content/css/metro-ui-dark.css",
-                "~/Content/css/icomoon.css",
+                "~/Content/css/bootmetro-responsive.css",
+                "~/Content/css/bootmetro-icons.css",
+                "~/Content/css/bootmetro-ui-light.css",
                 "~/Content/css/datepicker.css"));
-
-            bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
-                        "~/Content/themes/base/jquery.ui.core.css",
-                        "~/Content/themes/base/jquery.ui.resizable.css",
-                        "~/Content/themes/base/jquery.ui.selectable.css",
-                        "~/Content/themes/base/jquery.ui.accordion.css",
-                        "~/Content/themes/base/jquery.ui.autocomplete.css",
-                        "~/Content/themes/base/jquery.ui.button.css",
-                        "~/Content/themes/base/jquery.ui.dialog.css",
-                        "~/Content/themes/base/jquery.ui.slider.css",
-                        "~/Content/themes/base/jquery.ui.tabs.css",
-                        "~/Content/themes/base/jquery.ui.datepicker.css",
-                        "~/Content/themes/base/jquery.ui.progressbar.css",
-                        "~/Content/themes/base/jquery.ui.theme.css"));
         }
     }
 }

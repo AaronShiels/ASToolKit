@@ -10,5 +10,6 @@ namespace AS.ToolKit.Web.Models
         public int UserId { get; set; }
 
         public virtual ICollection<ShoppingContribution> ShoppingContributions { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Shopping Calculator";
+}
+
+@using AS.ToolKit.Web.Models
+@model IEnumerable<AS.ToolKit.Web.Models.ShoppingPeriod>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12 metro">
+            <h4 style="margin-left: 5px">Shopping Periods</h4>
+            @foreach (var period in Model)
+            {
+                <a class="tile wide text" href="@Url.Action("Period", "Shopping", new {periodId = period.Id})">
+                    <div class="text-header">@period.End.ToString("MMMM yyyy")</div>
+                    <div class="text"></div>
+                    <div class="text">@period.Start.ToString("dd MMMM") - @period.End.ToString("dd MMMM")</div>
+                </a>   
+            }
+        </div>
+    </div>
+</div>
+
+<footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12 align-center">
+                <button id="btnAddPeriod" type="button" class="win-command">
+                    <span class="win-commandicon win-commandring icon-plus"></span>
+                    <span class="win-label">Add</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="modalAddPeriod" class="modal hide fade">
+    @Html.Partial("_AddPeriod", new ShoppingPeriod(ViewBag.DefaultStartDate, ViewBag.DefaultEndDate))
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //Hook up datepickers
+            $('.datepicker').datepicker({ format: 'dd-M-yyyy' });
+            
+            //Hook up button events
+            $('#btnAddPeriod').click(function() {
+                $('#modalAddPeriod').modal();
+            });
+        });
+    </script>
+}

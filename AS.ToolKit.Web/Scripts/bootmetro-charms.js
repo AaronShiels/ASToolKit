@@ -4,7 +4,6 @@
  * Licensed under the MIT license
  */
 
-;
 (function($, window, document, undefined){
 
    // undefined is used here as the undefined global
@@ -53,33 +52,19 @@
          // and this.options
          // you can add more functions like the one below and 
          // call them like so: this.yourotherfunction(this.element, this.options).
-         
-         // check if the charms is pinned
-         /*var isPinned = $.cookie('charms_pinned');
-         if (isPinned != null || isPinned == 'true')
-         {
-            $("a#pin-charms").addClass("active");
-            $(this.element).width($.cookie('charms_width'));
-         }*/
-
       },
 
       showSection: function(sectionId, width){
          var w = this.options.width;
 
-         if (width != undefined)
+         if (width !== undefined){
             w = width;
-         
-         //$(this.element).animate({ width: w }, this.options.animateDuration, function () {
-         //   $(sectionId).show();
-         //});
-         //$(this.element).show();
-         var transition = $.support.transition && $(this.element).hasClass('fade');
+         }
 
-         $(this.element).show();
+         var transition = $.support.transition && $(this.element).hasClass('slide');
 
          if (transition) {
-            $(this.element).eq(0).offsetWidth(); // force reflow
+            var ow = $(this.element).eq(0).offsetWidth; // force reflow
          }
 
          $(this.element).addClass('in');
@@ -88,29 +73,36 @@
       },
 
       close: function(){
-         $(this.element).hide(); //.animate({ width: '0' }, this.options.animateDuration);
+         $(this.element).removeClass('in');
          return false;
       },
 
-      togglePin: function () {
-         var isPinned = $.cookie('charms_pinned');
-         
-         if (isPinned == null)
-         {
-            // pin
-            $.cookie('charms_pinned', 'true');
-            $.cookie('charms_width', $(this.element).width() );
-            $("a#pin-charms").addClass("active");
+      toggleSection: function(sectionId, width){
+         if ($(this.element).hasClass('in')){
+            this.close();
+         }else{
+            this.showSection(sectionId, width);
          }
-         else
-         {
-            // unpin
-            $.cookie('charms_pinned', null);
-            $.cookie('charms_width', null );
-            $("a#pin-charms").removeClass("active");
-         }
-
-      }
+      }//,
+//
+//      togglePin: function () {
+//         var isPinned = $.cookie('charms_pinned');
+//
+//         if (isPinned == null)
+//         {
+//            // pin
+//            $.cookie('charms_pinned', 'true');
+//            $.cookie('charms_width', $(this.element).width() );
+//            $("a#pin-charms").addClass("active");
+//         }
+//         else
+//         {
+//            // unpin
+//            $.cookie('charms_pinned', null);
+//            $.cookie('charms_width', null );
+//            $("a#pin-charms").removeClass("active");
+//         }
+//      }
       
    };
 
