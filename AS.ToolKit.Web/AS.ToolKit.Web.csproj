@@ -257,7 +257,7 @@
     <Content Include="Views\Shopping\Group.cshtml" />
     <Content Include="Views\Shopping\_AddPeriod.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
-    <Content Include="Views\Shopping\_DeletePeriods.cshtml" />
+    <Content Include="Views\Shopping\_EditContribution.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

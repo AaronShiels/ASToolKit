@@ -7,16 +7,20 @@
 
 <div class="container-fluid">
     <div class="row-fluid">
-        <div class="span12 metro">
+        <div class="span12">
             <h4 style="margin-left: 5px">Shopping Periods</h4>
-            @foreach (var period in Model)
-            {
-                <a class="tile wide text" href="@Url.Action("Period", "Shopping", new {periodId = period.Id})">
-                    <div class="text-header">@period.End.ToString("MMMM yyyy")</div>
-                    <div class="text"></div>
-                    <div class="text">@period.Start.ToString("dd MMMM") - @period.End.ToString("dd MMMM")</div>
-                </a>   
-            }
+            <div class="listview grid-layout">
+                @foreach (var period in Model)
+                {
+                    <div class="listview-item bg-color-blue" data-target="@Url.Action("Period", "Shopping", new {periodId = period.Id})">
+                        <div class="listview-item-object icon-calendar-3 pull-left"></div>
+                        <div class="listview-item-body">
+                            <h4 class="listview-item-heading">@period.End.ToString("MMMM yyyy")</h4>
+                            <p class="two-lines">@period.Start.ToString("dd MMMM") - @period.End.ToString("dd MMMM")</p>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -46,6 +50,9 @@
             $('.datepicker').datepicker({ format: 'dd-M-yyyy' });
             
             //Hook up button events
+            $('[data-target]').click(function () {
+                window.location.href = $(this).data('target');
+            });
             $('#btnAddPeriod').click(function() {
                 $('#modalAddPeriod').modal();
             });

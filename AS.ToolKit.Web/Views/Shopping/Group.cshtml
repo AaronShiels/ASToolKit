@@ -1,3 +1,125 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
 }
+
+@using AS.ToolKit.Web.Models
+@model AS.ToolKit.Web.Models.ShoppingGroup
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span4">
+            <h4>Group Details</h4>
+            <br/>
+            <div class="control-group">
+                <label class="control-label">
+                    Contribution Count
+                </label>
+            </div>
+            <div class="control-group">
+                <label class="control-label">
+                    Contributors
+                </label>
+            </div>
+            <div class="control-group">
+                <label class="control-label">
+                    Average Contribution
+                </label>
+            </div>
+            <div class="control-group">
+                <label class="control-label">
+                    Sub Calculation
+                </label>
+            </div>
+        </div>
+        <div class="span3">
+            <h4 style="margin-left: 5px">Available People</h4>
+            <div class="listview grid-layout">
+                @foreach (var person in ViewBag.AvailablePeople)
+                {
+                    <div class="listview-item bg-color-blue" data-target="@Url.Action("AddContribution", "Shopping", new {personId = person.Id, groupId = Model.Id})">
+                        <div class="listview-item-object icon-user-2 pull-left"></div>
+                        <div class="listview-item-body">
+                            <h4 class="listview-item-heading">@person.FirstName @person.LastName</h4>
+                            <p class="two-lines"></p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="span3">
+            <h4 style="margin-left: 5px">Contributions</h4>
+            <div class="listview grid-layout">
+                @foreach (var contribution in Model.ShoppingContributions)
+                {
+                    <div class="listview-item bg-color-blue" data-val="@contribution.Id">
+                        <div class="listview-item-object icon-user-2 pull-left"></div>
+                        <div class="listview-item-body">
+                            <h4 class="listview-item-heading">@contribution.ShoppingPerson.FirstName @contribution.ShoppingPerson.LastName</h4>
+                            <p class="two-lines">@string.Format("{0:C}",contribution.Amount)</p>
+                        </div>
+                    </div>
+                }
+            </div> 
+        </div>
+        <div class="span2"></div>
+    </div>
+</div>
+
+<footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span4 align-center">
+                <button id="btnDeleteGroup"  type="button" class="win-command">
+                    <span class="win-commandicon win-commandring icon-trash"></span>
+                    <span class="win-label">Delete Group</span>
+                </button>
+            </div>
+            <div class="span3 align-center">
+                <button type="button" class="win-command">
+                    <span class="win-commandicon win-commandring icon-users-2"></span>
+                    <span class="win-label">Manage Shoppers</span>
+                </button>
+            </div>
+            <div class="span5"></div>
+        </div>
+    </div>
+</footer>
+
+<div id="modalEditContribution"  class="modal hide fade">
+</div>
+
+<div id="modalDeleteGroup" class="modal message hide fade">
+    <div class="modal-header">
+         <h3>Delete Group</h3>
+      </div>
+      <div class="modal-body">
+         <p>Are you sure you want to delete the current group?</p>
+      </div>
+      <div class="modal-footer">
+          <button id="btnDeleteGroupConfirmed" class="btn btn-primary" data-target="@Url.Action("DeleteGroup", "Shopping", new {groupId = Model.Id})">Delete</button>
+          <button class="btn" data-dismiss="modal">Cancel</button>
+      </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Hook up button events
+            $('[data-target]').click(function () {
+                window.location.href = $(this).data('target');
+            });
+            $('#btnDeleteGroup').click(function () {
+                $('#modalDeleteGroup').modal();
+            });
+            $('[data-val]').click(function() {
+                $('#modalEditContribution').load('@Url.Action("EditContribution", "Shopping")' + '?contributionId=' + $(this).data('val'), function() {
+                    $('[data-target]').click(function () {
+                        window.location.href = $(this).data('target');
+                    });
+                });
+                $('#modalEditContribution').modal();
+            });
+        });
+    </script>
+}

@@ -43,27 +43,31 @@
                         <button type="submit" class="btn btn-primary">
                             Save
                         </button>
-                        <button id="btnRefreshPeriod" type="button" class="btn">
+                        <button type="button" class="btn" data-target="@Url.Action("Period", "Shopping", new {periodId = Model.Id})">
                             Reset
                         </button>
                     </div>
                 </div>
             }
         </div>
-        <div class="span8 metro">
+        <div class="span8">
             <h4 style="margin-left: 5px">Shopping Groups in Period</h4>
-            @{
-                var groupCount = 1;
-                foreach (var group in Model.ShoppingGroups)
-                {
-                    <a class="tile wide text" href="@Url.Action("Group", "Shopping", new {groupId = group.Id})">
-                        <div class="text-header">Group @groupCount</div>
-                        <div class="text"></div>
-                        <div class="text">Cha cha cha</div>
-                    </a>
-                    groupCount++;
+            <div class="listview grid-layout">
+                @{
+                    var groupCount = 1;
+                    foreach (var group in Model.ShoppingGroups)
+                    {
+                        <div class="listview-item bg-color-blue" data-target="@Url.Action("Group", "Shopping", new {groupId = group.Id})">
+                            <div class="listview-item-object icon-cart pull-left"></div>
+                            <div class="listview-item-body">
+                                <h4 class="listview-item-heading">Group @groupCount</h4>
+                                <p class="two-lines">Blah blah blah</p>
+                            </div>
+                        </div>
+                        groupCount++;
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
 </div>
@@ -72,7 +76,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4 align-center">
-                <button id="btnPrintableCopy"  type="button" class="win-command">
+                <button type="button" class="win-command">
                     <span class="win-commandicon win-commandring icon-printer"></span>
                     <span class="win-label">Printable Copy</span>
                 </button>
@@ -82,8 +86,7 @@
                 </button>
             </div>
             <div class="span8 align-center">
-                <hr class="win-command pull-left"/>
-                <button id="btnAddGroup" type="button" class="win-command">
+                <button type="button" class="win-command" data-target="@Url.Action("AddGroup", "Shopping", new {periodId = Model.Id})">
                     <span class="win-commandicon win-commandring icon-plus"></span>
                     <span class="win-label">Add Group</span>
                 </button>
@@ -94,14 +97,13 @@
 
 <div id="modalDeletePeriod" class="modal message hide fade">
     <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
          <h3>Delete Period</h3>
       </div>
       <div class="modal-body">
          <p>Are you sure you want to delete the period "@Model.End.ToString("MMMM yyyy")" spanning @Model.Start.ToString("dd-MMM") to @Model.End.ToString("dd-MMM")?</p>
       </div>
       <div class="modal-footer">
-          <button id="btnDeletePeriodConfirmed" class="btn btn-primary">Delete</button>
+          <button class="btn btn-primary" data-target="@Url.Action("DeletePeriod", "Shopping", new {periodId = Model.Id})">Delete</button>
           <button class="btn" data-dismiss="modal">Cancel</button>
       </div>
 </div>
@@ -114,17 +116,11 @@
             $('.datepicker').datepicker({ format: 'dd-M-yyyy' });
 
             //Hook up button events
-            $('#btnAddGroup').click(function () {
-                window.location.href = '@Url.Action("AddGroup", "Shopping", new {periodId = Model.Id})';
-            });
-            $('#btnRefreshPeriod').click(function() {
-                window.location.href = '@Url.Action("Period", "Shopping", new {periodId = Model.Id})';
+            $('[data-target]').click(function () {
+                window.location.href = $(this).data('target');
             });
             $('#btnDeletePeriod').click(function () {
                 $('#modalDeletePeriod').modal();
-            });
-            $('#btnDeletePeriodConfirmed').click(function() {
-                window.location.href = '@Url.Action("DeletePeriod", "Shopping", new {periodId = Model.Id})';
             });
         });
     </script>
