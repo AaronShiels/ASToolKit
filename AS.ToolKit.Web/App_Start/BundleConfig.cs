@@ -25,14 +25,14 @@ namespace AS.ToolKit.Web.App_Start {
                 "~/Scripts/bootmetro-charms.js"
                 ));
 
-            bundles.Add(new StyleBundle("~/Content/styles").Include(
+            bundles.Add(new StyleBundle("~/Content/css/site").Include(
                 "~/Content/css/site.css"));
 
-            bundles.Add(new StyleBundle("~/Content/bootstrap").Include(
+            bundles.Add(new StyleBundle("~/Content/css/bootstrap").Include(
                 "~/Content/css/bootstrap.css",
                 "~/Content/css/bootstrap-responsive.css"));
 
-            bundles.Add(new StyleBundle("~/Content/bootmetro").Include(
+            bundles.Add(new StyleBundle("~/Content/css/bootmetro").Include(
                 "~/Content/css/bootmetro.css",
                 "~/Content/css/bootmetro-responsive.css",
                 "~/Content/css/bootmetro-icons.css",

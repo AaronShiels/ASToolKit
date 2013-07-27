@@ -45,10 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Shopping\CalculationTests.cs" />
+    <Compile Include="Shopping\StructureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AS.ToolKit.Web\AS.ToolKit.Web.csproj">
+      <Project>{5d2ec8b4-2dbd-49ae-865f-1ed794932f1d}</Project>
+      <Name>AS.ToolKit.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

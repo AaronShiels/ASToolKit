@@ -171,6 +171,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Calculation\OweGraph.cs" />
     <Compile Include="Infrastructure\Security\TempUser.cs" />
     <Compile Include="Models\ShoppingContribution.cs" />
     <Compile Include="Models\ShoppingGroup.cs" />
@@ -258,6 +259,8 @@
     <Content Include="Views\Shopping\_AddPeriod.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shopping\_EditContribution.cshtml" />
+    <Content Include="Views\Shared\_PrintLayout.cshtml" />
+    <Content Include="Views\Shopping\PrintPeriod.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
