@@ -20,7 +20,7 @@
     {
         var standings = group.GetGroupStanding();
         var total = group.ShoppingContributions.Sum(c => c.Amount);
-        var average = total/group.ShoppingContributions.Count;
+        var average = group.GetAverageContribution();
         <div class="row-fluid">
             <div class="span12">
                 <h5>Group</h5>

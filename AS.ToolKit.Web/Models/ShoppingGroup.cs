@@ -21,12 +21,23 @@ namespace AS.ToolKit.Web.Models
             PeriodId = periodId;
         }
 
+        public decimal GetAverageContribution()
+        {
+            if (ShoppingContributions.Count > 0)
+            {
+                return ShoppingContributions.Sum(x => x.Amount)/ShoppingContributions.Count;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public Dictionary<ShoppingPerson, decimal> GetGroupStanding()
         {
-            var requiredAverage = ShoppingContributions.Sum(x => x.Amount)/ShoppingContributions.Count;
-
             var standingDict = new Dictionary<ShoppingPerson, decimal>();
 
+            var requiredAverage = GetAverageContribution();
             foreach (var contr in ShoppingContributions)
             {
                 if (!standingDict.ContainsKey(contr.ShoppingPerson))
@@ -36,7 +47,9 @@ namespace AS.ToolKit.Web.Models
                 standingDict[contr.ShoppingPerson] = contr.Amount - requiredAverage;
             }
 
+
             return standingDict;
         }
+
     }
 }

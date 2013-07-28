@@ -36,7 +36,7 @@
                         Average
                     </label>
                     <div class="controls">
-                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", (Model.ShoppingContributions.Sum(c => c.Amount)/Model.ShoppingContributions.Count)) per person</label>
+                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.GetAverageContribution()) per person</label>
                     </div>
                 </div>
                 <div class="control-group">
