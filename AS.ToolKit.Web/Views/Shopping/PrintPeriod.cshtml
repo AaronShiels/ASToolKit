@@ -16,7 +16,6 @@
             <h5>@Model.Start.ToString("dd MMMM") - @Model.End.ToString("dd MMMM")</h5>
         </div>
     </div>
-    <hr/>
     @foreach (var group in Model.ShoppingGroups)
     {
         var standings = group.GetGroupStanding();
@@ -24,8 +23,8 @@
         var average = total/group.ShoppingContributions.Count;
         <div class="row-fluid">
             <div class="span12">
-                <h3>Group</h3>
-                <table class="table">
+                <h5>Group</h5>
+                <table class="table table-condensed">
                     <tr>
                         <th>Person</th>
                         <th>Contribution</th>
@@ -53,11 +52,10 @@
             </div>
         </div>
     }
-    <hr/>
     <div class="row-fluid">
         <div class="span12">
-            <h3>Total</h3>
-            <table class="table">
+            <h5>Total</h5>
+            <table class="table table-condensed">
                 <tr>
                     <th>Person</th>
                     <th>Contribution</th>
@@ -86,26 +84,30 @@
     </div>
     <div class="row-fluid">
         <div class="span12">
-            <h3>Repayment Plan</h3>
-            <table class="table">
-                @{
-                    foreach (var oweVector in Model.GetRepaymentList(totalStandings))
-                    {
-                        <tr>
-                            <td>
-                                @string.Join(" ", new[] {oweVector.Giver.FirstName, oweVector.Giver.LastName})
-                            </td>
-                            <td>
-                                owes money to
-                            </td>
-                            <td>
-                                @string.Join(" ", new[] {oweVector.Receiver.FirstName, oweVector.Receiver.LastName})
-                            </td>
-                            <td>
-                                @string.Format(nfi, "{0:c}", oweVector.Amount)
-                            </td>
-                        </tr>
-                    }
+            <h5>Repayment Plan</h5>
+            <table class="table table-condensed">
+                <tr>
+                    <th>Ower</th>
+                    <td></td>
+                    <th>Owee</th>
+                    <th>Amount</th>
+                </tr>
+                @foreach (var oweVector in Model.GetRepaymentList(totalStandings))
+                {
+                    <tr>
+                        <td>
+                            @string.Join(" ", new[] {oweVector.Giver.FirstName, oweVector.Giver.LastName})
+                        </td>
+                        <td>
+                            owes money to
+                        </td>
+                        <td>
+                            @string.Join(" ", new[] {oweVector.Receiver.FirstName, oweVector.Receiver.LastName})
+                        </td>
+                        <td>
+                            @string.Format(nfi, "{0:c}", oweVector.Amount)
+                        </td>
+                    </tr>
                 }
             </table>
         </div>
