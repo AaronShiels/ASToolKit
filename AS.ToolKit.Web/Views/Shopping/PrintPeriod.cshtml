@@ -1,8 +1,11 @@
 ﻿@{
     ViewBag.Title = "PrintPeriod";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    var nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
+    nfi.CurrencyNegativePattern = 1;
 }
 
+@using System.Globalization
 @using AS.ToolKit.Web.Models
 @model AS.ToolKit.Web.Models.ShoppingPeriod
 
@@ -36,13 +39,13 @@
                                 @string.Join(" ", new[] {contribution.ShoppingPerson.FirstName, contribution.ShoppingPerson.LastName})
                             </td>
                             <td>
-                                @contribution.Amount.ToString("c")
+                                @string.Format(nfi, "{0:c}", contribution.Amount)
                             </td>
                             <td>
-                                @average.ToString("c")
+                                @string.Format(nfi, "{0:c}", average)
                             </td>
                             <td>
-                                @standings[contribution.ShoppingPerson].ToString("c")
+                                @string.Format(nfi, "{0:c}", standings[contribution.ShoppingPerson])
                             </td>
                         </tr>
                     }
@@ -70,10 +73,10 @@
                                 @string.Join(" ", new[] {person.FirstName, person.LastName})
                             </td>
                             <td>
-                                @totalContributions[person].ToString("c")
+                                @string.Format(nfi, "{0:c}", totalContributions[person])
                             </td>
                             <td>
-                                @totalStandings[person].ToString("c")
+                                @string.Format(nfi, "{0:c}", totalStandings[person])
                             </td>
                         </tr>
                     }
@@ -99,7 +102,7 @@
                                 @string.Join(" ", new[] {oweVector.Receiver.FirstName, oweVector.Receiver.LastName})
                             </td>
                             <td>
-                                @oweVector.Amount.ToString("c")
+                                @string.Format(nfi, "{0:c}", oweVector.Amount)
                             </td>
                         </tr>
                     }

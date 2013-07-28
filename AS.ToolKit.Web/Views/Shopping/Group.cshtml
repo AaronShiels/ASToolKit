@@ -1,8 +1,11 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
     ViewBag.Back = Url.Action("Period", "Shopping", new {periodId = Model.PeriodId});
+    var nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
+    nfi.CurrencyNegativePattern = 1;
 }
 
+@using System.Globalization
 @using AS.ToolKit.Web.Models
 @model AS.ToolKit.Web.Models.ShoppingGroup
 
@@ -25,7 +28,7 @@
                         Total
                     </label>
                     <div class="controls">
-                        <label class="control-label" style="text-align:left">@Model.ShoppingContributions.Sum(c => c.Amount).ToString("c")</label>
+                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.ShoppingContributions.Sum(c => c.Amount))</label>
                     </div>
                 </div>
                 <div class="control-group">
@@ -33,7 +36,7 @@
                         Average
                     </label>
                     <div class="controls">
-                        <label class="control-label" style="text-align:left">@((Model.ShoppingContributions.Sum(c => c.Amount)/Model.ShoppingContributions.Count).ToString("c")) per person</label>
+                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", (Model.ShoppingContributions.Sum(c => c.Amount)/Model.ShoppingContributions.Count)) per person</label>
                     </div>
                 </div>
                 <div class="control-group">
@@ -45,7 +48,7 @@
                             var standings = Model.GetGroupStanding();
                             foreach (var person in standings.Keys)
                             {
-                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@standings[person].ToString("c")</label>
+                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@string.Format(nfi, "{0:c}", standings[person])</label>
                             }
                         }
                     </div>
@@ -76,7 +79,7 @@
                         <div class="listview-item-object icon-user-2 pull-left"></div>
                         <div class="listview-item-body">
                             <h4 class="listview-item-heading">@contribution.ShoppingPerson.FirstName @contribution.ShoppingPerson.LastName</h4>
-                            <p class="two-lines">@contribution.Amount.ToString("c")</p>
+                            <p class="two-lines">@string.Format(nfi, "{0:c}", contribution.Amount)</p>
                         </div>
                     </div>
                 }

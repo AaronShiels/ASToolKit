@@ -1,8 +1,11 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
     ViewBag.Back = Url.Action("Index", "Shopping");
+    var nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
+    nfi.CurrencyNegativePattern = 1;
 }
 
+@using System.Globalization
 @using AS.ToolKit.Web.Models
 @model AS.ToolKit.Web.Models.ShoppingPeriod
 
@@ -55,7 +58,7 @@
                         Combined Total
                     </label>
                     <div class="controls">
-                        <label class="control-label" style="text-align:left">@Model.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount)).ToString("c")</label>
+                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount)))</label>
                     </div>
                 </div>
                 <div class="control-group">
@@ -67,7 +70,7 @@
                         var standings = Model.GetTotalStanding();
                         foreach (var person in standings.Keys)
                         {
-                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@standings[person].ToString("c")</label>
+                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@string.Format(nfi, "{0:c}", standings[person])</label>
                         }
                         }
                     </div>
