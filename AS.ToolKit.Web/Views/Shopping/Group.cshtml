@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
+    ViewBag.Back = Url.Action("Period", "Shopping", new {periodId = Model.PeriodId});
 }
 
 @using AS.ToolKit.Web.Models
@@ -10,26 +11,46 @@
         <div class="span4">
             <h4>Group Details</h4>
             <br/>
-            <div class="control-group">
-                <label class="control-label">
-                    Contribution Count
-                </label>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Contributors
-                </label>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Average Contribution
-                </label>
-            </div>
-            <div class="control-group">
-                <label class="control-label">
-                    Sub Calculation
-                </label>
-            </div>
+            <form class="form-horizontal">
+                <div class="control-group">
+                    <label class="control-label">
+                        Contributors
+                    </label>
+                    <div class="controls">
+                        <label class="control-label" style="text-align:left">@string.Join(", ", Model.ShoppingContributions.Select(c => c.ShoppingPerson).Select(p => p.FirstName))</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Total
+                    </label>
+                    <div class="controls">
+                        <label class="control-label" style="text-align:left">@Model.ShoppingContributions.Sum(c => c.Amount).ToString("c")</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Average
+                    </label>
+                    <div class="controls">
+                        <label class="control-label" style="text-align:left">@((Model.ShoppingContributions.Sum(c => c.Amount)/Model.ShoppingContributions.Count).ToString("c")) per person</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Group Standings
+                    </label>
+                    <div class="controls">
+                        @{
+                            var standings = Model.GetGroupStanding();
+                            foreach (var person in standings.Keys)
+                            {
+                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@standings[person].ToString("c")</label>
+                            }
+                        }
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="span3">
             <h4 style="margin-left: 5px">Available People</h4>
@@ -55,7 +76,7 @@
                         <div class="listview-item-object icon-user-2 pull-left"></div>
                         <div class="listview-item-body">
                             <h4 class="listview-item-heading">@contribution.ShoppingPerson.FirstName @contribution.ShoppingPerson.LastName</h4>
-                            <p class="two-lines">@string.Format("{0:C}",contribution.Amount)</p>
+                            <p class="two-lines">@contribution.Amount.ToString("c")</p>
                         </div>
                     </div>
                 }

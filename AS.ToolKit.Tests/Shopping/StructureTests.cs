@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AS.ToolKit.Web.Models;
 using NUnit.Framework;
 
@@ -167,14 +168,14 @@ namespace AS.ToolKit.Tests.Shopping
         [Test]
         public void GroupASpending()
         {
-            var spending = _groupA.GetTotalSpending();
+            var spending = _groupA.ShoppingContributions.Sum(c => c.Amount);
             Assert.AreEqual(1000, spending);
         }
 
         [Test]
         public void GroupBSpending()
         {
-            var spending = _groupB.GetTotalSpending();
+            var spending = _groupB.ShoppingContributions.Sum(c => c.Amount);
             Assert.AreEqual(277, spending);
         }
 
@@ -200,7 +201,7 @@ namespace AS.ToolKit.Tests.Shopping
         [Test]
         public void PeriodSpending()
         {
-            var spending = _period.GetTotalSpending();
+            var spending = _period.ShoppingGroups.Sum(x => x.ShoppingContributions.Sum(c => c.Amount));
             Assert.AreEqual(1277, spending);
         }
 

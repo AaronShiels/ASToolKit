@@ -27,11 +27,6 @@ namespace AS.ToolKit.Web.Models
             End = defaultEnd;
         }
 
-        public decimal GetTotalSpending()
-        {
-            return ShoppingGroups.Sum(x => x.GetTotalSpending());
-        }
-
         public Dictionary<ShoppingPerson, decimal> GetTotalContributions()
         {
             var contributionDict = new Dictionary<ShoppingPerson, decimal>();

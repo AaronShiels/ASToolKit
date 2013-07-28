@@ -136,5 +136,12 @@ namespace AS.ToolKit.Web.Controllers
 
             return RedirectToAction("Group", "Shopping", new { groupId = contribution.GroupId });
         }
+
+        public ViewResult PrintPeriod(int periodId)
+        {
+            var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);
+
+            return View(period);
+        }
     }
 }

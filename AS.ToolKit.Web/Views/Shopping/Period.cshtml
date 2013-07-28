@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
+    ViewBag.Back = Url.Action("Index", "Shopping");
 }
 
 @using AS.ToolKit.Web.Models
@@ -10,7 +11,7 @@
         <div class="span4">
             <h4>Period Details</h4>
             <br/>
-            @using (Html.BeginForm("Period", "Shopping", FormMethod.Post, new {@class = "form-horizontal"}))
+            @using (Html.BeginForm("Period", "Shopping", FormMethod.Post, new { @class = "form-horizontal" }))
             {
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.UserId)
@@ -19,7 +20,7 @@
                         Name
                     </label>
                     <div class="controls">
-                        <input type="text" value="@Model.End.ToString("MMMM yyyy")" disabled="disabled" />
+                        <label class="control-label" style="text-align:left">@Model.End.ToString("MMMM yyyy")</label>
                     </div>
                 </div>
                 <div class="control-group">
@@ -39,11 +40,44 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label">
+                        Contributors
+                    </label>
+                    <div class="controls">
+                        @foreach (var person in @Model.ShoppingGroups.SelectMany(g => g.ShoppingContributions).Select(c => c.ShoppingPerson).Distinct())
+                        {
+                            <label class="control-label" style="text-align:left">@string.Join(" ", person.FirstName, person.LastName)</label>
+                        }
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Combined Total
+                    </label>
+                    <div class="controls">
+                        <label class="control-label" style="text-align:left">@Model.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount)).ToString("c")</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">
+                        Combined Standings
+                    </label>
+                    <div class="controls">
+                        @{
+                        var standings = Model.GetTotalStanding();
+                        foreach (var person in standings.Keys)
+                        {
+                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@standings[person].ToString("c")</label>
+                        }
+                        }
+                    </div>
+                </div>
+                <div class="control-group">
                     <div class="controls">
                         <button type="submit" class="btn btn-primary">
                             Save
                         </button>
-                        <button type="button" class="btn" data-target="@Url.Action("Period", "Shopping", new {periodId = Model.Id})">
+                        <button type="button" class="btn" data-target="@Url.Action("Period", "Shopping", new { periodId = Model.Id })">
                             Reset
                         </button>
                     </div>
@@ -57,11 +91,13 @@
                     var groupCount = 1;
                     foreach (var group in Model.ShoppingGroups)
                     {
-                        <div class="listview-item bg-color-blue" data-target="@Url.Action("Group", "Shopping", new {groupId = group.Id})">
+                        <div class="listview-item bg-color-blue" data-target="@Url.Action("Group", "Shopping", new { groupId = group.Id })">
                             <div class="listview-item-object icon-cart pull-left"></div>
                             <div class="listview-item-body">
                                 <h4 class="listview-item-heading">Group @groupCount</h4>
-                                <p class="two-lines">Blah blah blah</p>
+                                <p class="two-lines">
+                                    @string.Join(", ", group.ShoppingContributions.Select(c => c.ShoppingPerson).Select(p => p.FirstName))
+                                </p>
                             </div>
                         </div>
                         groupCount++;
@@ -76,7 +112,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span4 align-center">
-                <button type="button" class="win-command">
+                <button type="button" class="win-command" data-target="@Url.Action("PrintPeriod", "Shopping", new { periodId = Model.Id })">
                     <span class="win-commandicon win-commandring icon-printer"></span>
                     <span class="win-label">Printable Copy</span>
                 </button>
@@ -86,7 +122,7 @@
                 </button>
             </div>
             <div class="span8 align-center">
-                <button type="button" class="win-command" data-target="@Url.Action("AddGroup", "Shopping", new {periodId = Model.Id})">
+                <button type="button" class="win-command" data-target="@Url.Action("AddGroup", "Shopping", new { periodId = Model.Id })">
                     <span class="win-commandicon win-commandring icon-plus"></span>
                     <span class="win-label">Add Group</span>
                 </button>
@@ -103,7 +139,7 @@
          <p>Are you sure you want to delete the period "@Model.End.ToString("MMMM yyyy")" spanning @Model.Start.ToString("dd-MMM") to @Model.End.ToString("dd-MMM")?</p>
       </div>
       <div class="modal-footer">
-          <button class="btn btn-primary" data-target="@Url.Action("DeletePeriod", "Shopping", new {periodId = Model.Id})">Delete</button>
+          <button class="btn btn-primary" data-target="@Url.Action("DeletePeriod", "Shopping", new { periodId = Model.Id })">Delete</button>
           <button class="btn" data-dismiss="modal">Cancel</button>
       </div>
 </div>

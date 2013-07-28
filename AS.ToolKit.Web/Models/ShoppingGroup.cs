@@ -21,14 +21,9 @@ namespace AS.ToolKit.Web.Models
             PeriodId = periodId;
         }
 
-        public decimal GetTotalSpending()
-        {
-            return ShoppingContributions.Sum(x => x.Amount);
-        }
-
         public Dictionary<ShoppingPerson, decimal> GetGroupStanding()
         {
-            var requiredAverage = GetTotalSpending()/ShoppingContributions.Count;
+            var requiredAverage = ShoppingContributions.Sum(x => x.Amount)/ShoppingContributions.Count;
 
             var standingDict = new Dictionary<ShoppingPerson, decimal>();
 

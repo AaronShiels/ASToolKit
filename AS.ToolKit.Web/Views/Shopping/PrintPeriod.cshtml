@@ -3,4 +3,108 @@
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 }
 
-<h2>PrintPeriod</h2>
+@using AS.ToolKit.Web.Models
+@model AS.ToolKit.Web.Models.ShoppingPeriod
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <h1>Shopping @Model.End.ToString("MMMM yyyy")</h1>
+            <h5>@Model.Start.ToString("dd MMMM") - @Model.End.ToString("dd MMMM")</h5>
+        </div>
+    </div>
+    <hr/>
+    @foreach (var group in Model.ShoppingGroups)
+    {
+        var standings = group.GetGroupStanding();
+        var total = group.ShoppingContributions.Sum(c => c.Amount);
+        var average = total/group.ShoppingContributions.Count;
+        <div class="row-fluid">
+            <div class="span12">
+                <h3>Group</h3>
+                <table class="table">
+                    <tr>
+                        <th>Person</th>
+                        <th>Contribution</th>
+                        <th>Required Average</th>
+                        <th>Standing</th>
+                    </tr>
+                    @foreach (var contribution in group.ShoppingContributions)
+                    {
+                        <tr>
+                            <td>
+                                @string.Join(" ", new[] {contribution.ShoppingPerson.FirstName, contribution.ShoppingPerson.LastName})
+                            </td>
+                            <td>
+                                @contribution.Amount.ToString("c")
+                            </td>
+                            <td>
+                                @average.ToString("c")
+                            </td>
+                            <td>
+                                @standings[contribution.ShoppingPerson].ToString("c")
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+    <hr/>
+    <div class="row-fluid">
+        <div class="span12">
+            <h3>Total</h3>
+            <table class="table">
+                <tr>
+                    <th>Person</th>
+                    <th>Contribution</th>
+                    <th>Combined Standing</th>
+                </tr>
+                @{
+                    var totalContributions = Model.GetTotalContributions();
+                    var totalStandings = Model.GetTotalStanding();
+                    foreach (var person in totalContributions.Keys)
+                    {
+                        <tr>
+                            <td>
+                                @string.Join(" ", new[] {person.FirstName, person.LastName})
+                            </td>
+                            <td>
+                                @totalContributions[person].ToString("c")
+                            </td>
+                            <td>
+                                @totalStandings[person].ToString("c")
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <h3>Repayment Plan</h3>
+            <table class="table">
+                @{
+                    foreach (var oweVector in Model.GetRepaymentList(totalStandings))
+                    {
+                        <tr>
+                            <td>
+                                @string.Join(" ", new[] {oweVector.Giver.FirstName, oweVector.Giver.LastName})
+                            </td>
+                            <td>
+                                owes money to
+                            </td>
+                            <td>
+                                @string.Join(" ", new[] {oweVector.Receiver.FirstName, oweVector.Receiver.LastName})
+                            </td>
+                            <td>
+                                @oweVector.Amount.ToString("c")
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
