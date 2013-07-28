@@ -22,7 +22,7 @@ namespace AS.ToolKit.Web.Controllers
 
         public ViewResult Index()
         {
-            var periods = _db.ShoppingPeriods.Where(p => p.UserId == TempUser.CurrentUserId);
+            var periods = _db.ShoppingPeriods.Where(p => p.UserId == TempUser.CurrentUserId).OrderBy(p => p.End);
             var highestEndDate = DateTime.Today.AddDays(-8);
             if (_db.ShoppingPeriods.Any())
             {
