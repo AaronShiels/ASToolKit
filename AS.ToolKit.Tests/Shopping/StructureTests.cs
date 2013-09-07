@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AS.ToolKit.Web.Models;
+using AS.ToolKit.Core.Entities;
 using NUnit.Framework;
 
 namespace AS.ToolKit.Tests.Shopping
@@ -57,7 +57,6 @@ namespace AS.ToolKit.Tests.Shopping
             _period = new ShoppingPeriod
                 {
                     Id = 1,
-                    UserId = 1,
                     Start = new DateTime(2013,1,1),
                     End = new DateTime(2013,2,1),
                     ShoppingGroups = new LinkedList<ShoppingGroup>()
@@ -67,7 +66,6 @@ namespace AS.ToolKit.Tests.Shopping
             _groupA = new ShoppingGroup
             {
                 Id = 1,
-                PeriodId = _period.Id,
                 ShoppingPeriod = _period,
                 ShoppingContributions = new List<ShoppingContribution>()
             };
@@ -75,7 +73,6 @@ namespace AS.ToolKit.Tests.Shopping
             _groupB = new ShoppingGroup
             {
                 Id = 2,
-                PeriodId = _period.Id,
                 ShoppingPeriod = _period,
                 ShoppingContributions = new List<ShoppingContribution>()
             };
@@ -84,8 +81,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionA = new ShoppingContribution
                 {
                     Id = 1,
-                    GroupId = _groupA.Id,
-                    PersonId = _pAaron.Id,
                     ShoppingGroup = _groupA,
                     ShoppingPerson = _pAaron,
                     Amount = 485
@@ -93,8 +88,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionB = new ShoppingContribution
                 {
                     Id = 2,
-                    GroupId = _groupA.Id,
-                    PersonId = _pBill.Id,
                     ShoppingGroup = _groupA,
                     ShoppingPerson = _pBill,
                     Amount = 372
@@ -102,8 +95,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionC = new ShoppingContribution
                 {
                     Id = 3,
-                    GroupId = _groupA.Id,
-                    PersonId = _pThom.Id,
                     ShoppingGroup = _groupA,
                     ShoppingPerson = _pThom,
                     Amount = 143
@@ -113,8 +104,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionD = new ShoppingContribution
             {
                 Id = 4,
-                GroupId = _groupB.Id,
-                PersonId = _pAaron.Id,
                 ShoppingGroup = _groupB,
                 ShoppingPerson = _pAaron,
                 Amount = 0
@@ -122,8 +111,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionE = new ShoppingContribution
             {
                 Id = 5,
-                GroupId = _groupB.Id,
-                PersonId = _pBill.Id,
                 ShoppingGroup = _groupB,
                 ShoppingPerson = _pBill,
                 Amount = 277
@@ -131,8 +118,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionF = new ShoppingContribution
             {
                 Id = 6,
-                GroupId = _groupB.Id,
-                PersonId = _pThom.Id,
                 ShoppingGroup = _groupB,
                 ShoppingPerson = _pThom,
                 Amount = 0
@@ -140,8 +125,6 @@ namespace AS.ToolKit.Tests.Shopping
             var contributionG = new ShoppingContribution
             {
                 Id = 7,
-                GroupId = _groupB.Id,
-                PersonId = _pBen.Id,
                 ShoppingGroup = _groupB,
                 ShoppingPerson = _pBen,
                 Amount = 0

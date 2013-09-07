@@ -1,107 +1,195 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
+using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using AS.ToolKit.Web.Infrastructure.Security;
-using AS.ToolKit.Web.Models;
-using AS.ToolKit.Web.Parts;
+using AS.ToolKit.Data.Repository;
+using AS.ToolKit.Web.ViewModels;
 
 namespace AS.ToolKit.Web.Controllers
 {
     public class ShoppingController : Controller
     {
-        private readonly ToolKitDb _db;
+        private readonly IShoppingRepository _repo;
+        private readonly int _userId;
+        private readonly NumberFormatInfo _nfi;
 
-        public ShoppingController(ToolKitDb db)
+        public ShoppingController(IShoppingRepository repo)
         {
-            if (db == null) throw new ArgumentNullException("db");
-            _db = db;
+            if (repo == null) throw new ArgumentNullException("repo");
+            _repo = repo;
+            _userId = 1;
+            _nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
+            _nfi.CurrencyNegativePattern = 1;
         }
 
-        public ViewResult Index()
+        public ViewResult Index(string error)
         {
-            var periods = _db.ShoppingPeriods.Where(p => p.UserId == TempUser.CurrentUserId).OrderBy(p => p.End);
-            var highestEndDate = DateTime.Today.AddDays(-8);
-            if (_db.ShoppingPeriods.Any())
+            var periods = _repo.GetPeriods(_userId).ToList();
+            var highestEndDate = periods.Any() ? periods.Max(p => p.End) : DateTime.Today.AddDays(-8);
+            var model = new IndexViewModel
+                {
+                    UserId = _userId,
+                    Periods = periods.Select(p => new SelectableItemViewModel
+                        {
+                            Heading = DateToName(p.End),
+                            Text = p.Start.ToString("dd MMM") + " - " + p.End.ToString("dd MMM"),
+                            Hyperlink = Url.Action("Period", "Shopping", new {periodId = p.Id})
+                        }).ToList(),
+                    DefaultStartDateString = highestEndDate.AddDays(1).ToString("dd-MMM-yyyy"),
+                    DefaultEndDateString = DateTime.Today.ToString("dd-MMM-yyyy"),
+                    Message = new AlertMessage("", "", AlertMessage.Type.Hidden)
+                };
+
+            if (!string.IsNullOrEmpty(error))
             {
-                highestEndDate = periods.Max(p => p.End);
+                model.Message = new AlertMessage("Error!", error, AlertMessage.Type.Error);
             }
-            ViewBag.DefaultStartDate = highestEndDate.AddDays(1);
-            ViewBag.DefaultEndDate = DateTime.Today;
 
-            return View(periods);
+            return View(model);
         }
 
+        private static string DateToName(DateTime date)
+        {
+            return date.ToString("MMMM yyyy");
+        }
+
+        
         [HttpPost]
-        public RedirectToRouteResult AddPeriod(ShoppingPeriod period)
+        public RedirectToRouteResult AddPeriod(AddPeriodViewModel model)
         {
-            period.UserId = TempUser.CurrentUserId;
-            _db.ShoppingPeriods.Add(period);
-            _db.SaveChanges();
+            DateTime dateStart, dateEnd;
 
-            _db.ShoppingGroups.Add(new ShoppingGroup(period.Id));
-            _db.SaveChanges();
+            if (DateTime.TryParse(model.Start, out dateStart) && DateTime.TryParse(model.End, out dateEnd))
+            {
+                _repo.CreatePeriod(model.UserId, dateStart, dateEnd);
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Shopping", new { error = string.Format("The dates you provided were invalid: '{0}' '{1}'", model.Start, model.End) });
+            }
         }
-
-        [HttpGet]
-        public ViewResult Period(int periodId)
+        
+        public ViewResult Period(int periodId, string error)
         {
-            var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);
+            var period = _repo.GetPeriod(periodId);
+            var model = new PeriodViewModel
+                {
+                    PeriodId = periodId,
+                    Name = DateToName(period.End),
+                    CombinedTotal = string.Format(_nfi, "{0:c}", period.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount))),
+                    Contributors = period.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))),
+                    Groups = period.ShoppingGroups.Select(g => new SelectableItemViewModel
+                        {
+                            Heading = g.Name,
+                            Text = string.Join(", ", g.ShoppingContributions.Select(c => c.ShoppingPerson.FirstName)),
+                            Hyperlink = Url.Action("Group", "Shopping", new {groupId = g.Id})
+                        }).ToList(),
+                    Start = period.Start.ToString("dd-MMM-yyyy"),
+                    End = period.End.ToString("dd-MMM-yyyy"),
+                    Message = new AlertMessage("", "", AlertMessage.Type.Hidden)
+                };
 
-            return View(period);
+            if (!string.IsNullOrEmpty(error))
+            {
+                model.Message = new AlertMessage("Error!", error, AlertMessage.Type.Error);
+            }
+
+            return View(model);
         }
-
+        
         [HttpPost]
-        public RedirectToRouteResult Period(ShoppingPeriod period)
+        public RedirectToRouteResult Period(PeriodViewModel model)
         {
-            _db.ShoppingPeriods.Attach(period);
-            _db.Entry(period).State = EntityState.Modified;
-            _db.SaveChanges();
+            DateTime dateStart, dateEnd;
 
-            return RedirectToAction("Period", new { periodId = period.Id });
+            if (DateTime.TryParse(model.Start, out dateStart) && DateTime.TryParse(model.End, out dateEnd))
+            {
+                _repo.UpdatePeriod(model.PeriodId, dateStart, dateEnd);
+
+                return RedirectToAction("Period", new { periodId = model.PeriodId });
+            }
+            else
+            {
+                return RedirectToAction("Period", "Shopping", new { periodId = model.PeriodId, error = string.Format("The dates you provided were invalid: '{0}' '{1}'", model.Start, model.End) });
+            }
         }
 
         public RedirectToRouteResult DeletePeriod(int periodId)
         {
-            var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);
-            _db.ShoppingPeriods.Remove(period);
-            _db.SaveChanges();
+            _repo.DeletePeriod(periodId);
 
             return RedirectToAction("Index");
         }
 
-        public RedirectToRouteResult AddGroup(int periodId)
+        public RedirectToRouteResult AddGroup(AddGroupViewModel model)
         {
-            _db.ShoppingGroups.Add(new ShoppingGroup(periodId));
-            _db.SaveChanges();
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                _repo.CreateGroup(model.PeriodId, model.Name);
 
-            return RedirectToAction("Period", new {periodId});
+                return RedirectToAction("Period", new {periodId = model.PeriodId});
+            }
+            else
+            {
+                return RedirectToAction("Period", "Shopping", new { periodId = model.PeriodId, error = string.Format("The name you provided was empty.") });
+            }
         }
 
-        public ViewResult Group(int groupId)
+        public ViewResult Group(int groupId, string error)
         {
-            var group = _db.ShoppingGroups.SingleOrDefault(g => g.Id == groupId);
+            var group = _repo.GetGroup(groupId);
+            var model = new GroupViewModel
+            {
+                PeriodId = group.ShoppingPeriod.Id,
+                PeriodName = DateToName(group.ShoppingPeriod.End),
+                GroupId = group.Id,
+                Name = group.Name,
+                Contributions = group.ShoppingContributions.Select(c => new SelectableItemViewModel
+                    {
+                        Heading = string.Format("{0} {1}", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName),
+                        Text = string.Join(", ", c.Amount.ToString("c")),
+                        Hyperlink = "#"
+                    }).ToList(),
+                Available = _repo.GetAvailablePeopleByGroup(groupId, _userId).Select(p => new SelectableItemViewModel
+                    {
+                        Heading = string.Format("{0} {1}", p.FirstName, p.LastName),
+                        Hyperlink = "#"
+                    }).ToList(),
+                Message = new AlertMessage("", "", AlertMessage.Type.Hidden)
+            };
 
-            ViewBag.AvailablePeople =
-                _db.ShoppingPersons.Where(
-                    p => p.UserId == TempUser.CurrentUserId && p.ShoppingContributions.All(c => c.GroupId != groupId));
+            if (!string.IsNullOrEmpty(error))
+            {
+                model.Message = new AlertMessage("Error!", error, AlertMessage.Type.Error);
+            }
 
-            return View(group);
+            return View(model);
         }
 
-        public RedirectToRouteResult DeleteGroup(int groupId)
+        [HttpPost]
+        public RedirectToRouteResult Group(GroupViewModel model)
         {
-            var group = _db.ShoppingGroups.SingleOrDefault(g => g.Id == groupId);
-            _db.ShoppingGroups.Remove(group);
-            _db.SaveChanges();
+            if (!string.IsNullOrEmpty(model.Name))
+            {
+                _repo.UpdateGroup(model.GroupId, model.Name);
 
-            return RedirectToAction("Period", "Shopping", new {periodId = group.PeriodId});
+                return RedirectToAction("Group", new {groupId = model.GroupId});
+            }
+            else
+            {
+                return RedirectToAction("Group", "Shopping", new { groupId = model.GroupId, error = string.Format("The name you provided was empty.") });
+            }
         }
 
+        public RedirectToRouteResult DeleteGroup(int groupId, int periodId)
+        {
+            _repo.DeleteGroup(groupId);
+
+            return RedirectToAction("Period", "Shopping", new {periodId = periodId});
+        }
+        /*
         public RedirectToRouteResult AddContribution(int personId, int groupId)
         {
             _db.ShoppingContributions.Add(new ShoppingContribution(personId, groupId));
@@ -142,6 +230,6 @@ namespace AS.ToolKit.Web.Controllers
             var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);
 
             return View(period);
-        }
+        }*/
     }
 }

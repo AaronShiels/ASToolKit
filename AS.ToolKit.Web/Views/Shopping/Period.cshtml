@@ -1,165 +1,141 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
-    ViewBag.Back = Url.Action("Index", "Shopping");
-    var nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
-    nfi.CurrencyNegativePattern = 1;
+    ViewBag.Section = "Applications";
 }
 
-@using System.Globalization
-@using AS.ToolKit.Web.Models
-@model AS.ToolKit.Web.Models.ShoppingPeriod
+@using AS.ToolKit.Web.ViewModels
+@model AS.ToolKit.Web.ViewModels.PeriodViewModel
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span4">
-            <h4>Period Details</h4>
-            <br/>
-            @using (Html.BeginForm("Period", "Shopping", FormMethod.Post, new { @class = "form-horizontal" }))
-            {
-                @Html.HiddenFor(m => m.Id)
-                @Html.HiddenFor(m => m.UserId)
-                <div class="control-group">
-                    <label class="control-label">
-                        Name
-                    </label>
-                    <div class="controls">
-                        <label class="control-label" style="text-align:left">@Model.End.ToString("MMMM yyyy")</label>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Start Date
-                    </label>
-                    <div class="controls">
-                        @Html.EditorFor(m => m.Start)
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        End Date
-                    </label>
-                    <div class="controls">
-                        @Html.EditorFor(m => m.End)
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Contributors
-                    </label>
-                    <div class="controls">
-                        @foreach (var person in @Model.ShoppingGroups.SelectMany(g => g.ShoppingContributions).Select(c => c.ShoppingPerson).Distinct())
-                        {
-                            <label class="control-label" style="text-align:left">@string.Join(" ", person.FirstName, person.LastName)</label>
-                        }
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Combined Total
-                    </label>
-                    <div class="controls">
-                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount)))</label>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Combined Standings
-                    </label>
-                    <div class="controls">
-                        @{
-                        var standings = Model.GetTotalStanding();
-                        foreach (var person in standings.Keys)
-                        {
-                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@string.Format(nfi, "{0:c}", standings[person])</label>
-                        }
-                        }
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <button type="submit" class="btn btn-primary">
-                            Save
-                        </button>
-                        <button type="button" class="btn" data-target="@Url.Action("Period", "Shopping", new { periodId = Model.Id })">
-                            Reset
-                        </button>
-                    </div>
-                </div>
-            }
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@ViewBag.Title</h1>
+            <ol class="breadcrumb">
+                <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
+                <li class="active">@Model.Name</li>
+            </ol>
         </div>
-        <div class="span8">
-            <h4 style="margin-left: 5px">Shopping Groups in Period</h4>
-            <div class="listview grid-layout">
-                @{
-                    var groupCount = 1;
-                    foreach (var group in Model.ShoppingGroups)
+    </div>
+    @Html.DisplayFor(m => m.Message)
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default" style="max-height: 400px; overflow: auto">
+                <div class="panel-heading">Interval Groups</div>
+                <div class="list-group">
+                    @Html.DisplayFor(m => m.Groups)
+                </div>
+            </div>
+            <button id="btnAddGroup" type="button" class="btn btn-success col-md-12">
+                <i class="icon-plus"></i>
+                Add New Group
+            </button>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Interval Details</div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Period", "Shopping", FormMethod.Post, new {@class = "form-horizontal"}))
                     {
-                        <div class="listview-item bg-color-blue" data-target="@Url.Action("Group", "Shopping", new { groupId = group.Id })">
-                            <div class="listview-item-object icon-cart pull-left"></div>
-                            <div class="listview-item-body">
-                                <h4 class="listview-item-heading">Group @groupCount</h4>
-                                <p class="two-lines">
-                                    @string.Join(", ", group.ShoppingContributions.Select(c => c.ShoppingPerson).Select(p => p.FirstName))
-                                </p>
+                        @Html.HiddenFor(m => m.PeriodId)
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Name</label>
+                            <div class="col-md-10">
+                                <label class="control-label control-label-detail">@Model.Name</label>
                             </div>
                         </div>
-                        groupCount++;
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Start, new {@class = "control-label col-md-2"})
+                            <div class="col-md-10">
+                                @Html.EditorFor(m => m.Start, new {@class = "form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.End, new {@class = "control-label col-md-2"})
+                            <div class="col-md-10">
+                                @Html.EditorFor(m => m.End, new {@class = "form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Contributors</label>
+                            <div class="col-md-10">
+                                <label class="control-label control-label-detail">@string.Join(", ", Model.Contributors)</label>   
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Total</label>
+                            <div class="col-md-10">
+                                <label class="control-label control-label-detail">@Model.CombinedTotal</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="icon-ok"></i>
+                                    Save Changes
+                                </button>
+                                <button id="btnReset" type="button" class="btn btn-default">
+                                    Reset
+                                </button>
+                                <button id="btnDeleteInterval" type="button" class="btn btn-danger pull-right">
+                                    <i class="icon-remove"></i>
+                                    Delete Interval
+                                </button>
+                            </div>
+                        </div>
                     }
-                }
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span4 align-center">
-                <button type="button" class="win-command" data-target="@Url.Action("PrintPeriod", "Shopping", new { periodId = Model.Id })">
-                    <span class="win-commandicon win-commandring icon-printer"></span>
-                    <span class="win-label">Printable Copy</span>
-                </button>
-                <button id="btnDeletePeriod"  type="button" class="win-command">
-                    <span class="win-commandicon win-commandring icon-trash"></span>
-                    <span class="win-label">Delete Period</span>
-                </button>
+<div id="divAddGroup" class="modal fade">
+    <div class="modal-dialog">
+        @Html.Partial("_AddGroup", new AddGroupViewModel
+            {
+                PeriodId = Model.PeriodId
+            })
+    </div>
+</div>
+
+<div id="divDeleteInterval" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Interval</h4>
             </div>
-            <div class="span8 align-center">
-                <button type="button" class="win-command" data-target="@Url.Action("AddGroup", "Shopping", new { periodId = Model.Id })">
-                    <span class="win-commandicon win-commandring icon-plus"></span>
-                    <span class="win-label">Add Group</span>
+            <div class="modal-body">
+                Are you sure you would like to delete this Shopping Interval "@Model.Name"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="btnDeleteIntervalConfirmed" type="submit" class="btn btn-danger">
+                    <i class="icon-remove"></i>
+                    Delete
                 </button>
             </div>
         </div>
     </div>
-</footer>
-
-<div id="modalDeletePeriod" class="modal message hide fade">
-    <div class="modal-header">
-         <h3>Delete Period</h3>
-      </div>
-      <div class="modal-body">
-         <p>Are you sure you want to delete the period "@Model.End.ToString("MMMM yyyy")" spanning @Model.Start.ToString("dd-MMM") to @Model.End.ToString("dd-MMM")?</p>
-      </div>
-      <div class="modal-footer">
-          <button class="btn btn-primary" data-target="@Url.Action("DeletePeriod", "Shopping", new { periodId = Model.Id })">Delete</button>
-          <button class="btn" data-dismiss="modal">Cancel</button>
-      </div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            //Hook up datepickers
-            $('.datepicker').datepicker({ format: 'dd-M-yyyy' });
-
-            //Hook up button events
-            $('[data-target]').click(function () {
-                window.location.href = $(this).data('target');
+            $('#btnAddGroup').click(function() {
+                $('#divAddGroup').modal();
             });
-            $('#btnDeletePeriod').click(function () {
-                $('#modalDeletePeriod').modal();
+            $('#btnDeleteInterval').click(function() {
+                $('#divDeleteInterval').modal();
+            });
+            $('#btnReset').click(function () {
+                window.location.href = '@Url.Action("Period", "Shopping", new {periodId = Model.PeriodId})';
+            });
+            $('#btnDeleteIntervalConfirmed').click(function () {
+                window.location.href = '@Url.Action("DeletePeriod", "Shopping", new {periodId = Model.PeriodId})';
             });
         });
     </script>

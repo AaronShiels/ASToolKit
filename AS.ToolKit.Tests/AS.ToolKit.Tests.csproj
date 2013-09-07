@@ -53,6 +53,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AS.ToolKit.Core\AS.ToolKit.Core.csproj">
+      <Project>{ea9af1d9-c90c-482a-9721-db4a6003582f}</Project>
+      <Name>AS.ToolKit.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AS.ToolKit.Web\AS.ToolKit.Web.csproj">
       <Project>{5d2ec8b4-2dbd-49ae-865f-1ed794932f1d}</Project>
       <Name>AS.ToolKit.Web</Name>

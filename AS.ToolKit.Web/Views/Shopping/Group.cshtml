@@ -1,148 +1,107 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
-    ViewBag.Back = Url.Action("Period", "Shopping", new {periodId = Model.PeriodId});
-    var nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString()).NumberFormat;
-    nfi.CurrencyNegativePattern = 1;
+    ViewBag.Section = "Applications";
 }
 
-@using System.Globalization
-@using AS.ToolKit.Web.Models
-@model AS.ToolKit.Web.Models.ShoppingGroup
+@using AS.ToolKit.Web.ViewModels
+@model AS.ToolKit.Web.ViewModels.GroupViewModel
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span4">
-            <h4>Group Details</h4>
-            <br/>
-            <form class="form-horizontal">
-                <div class="control-group">
-                    <label class="control-label">
-                        Contributors
-                    </label>
-                    <div class="controls">
-                        <label class="control-label" style="text-align:left">@string.Join(", ", Model.ShoppingContributions.Select(c => c.ShoppingPerson).Select(p => p.FirstName))</label>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Total
-                    </label>
-                    <div class="controls">
-                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.ShoppingContributions.Sum(c => c.Amount))</label>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Average
-                    </label>
-                    <div class="controls">
-                        <label class="control-label" style="text-align:left">@string.Format(nfi, "{0:c}", Model.GetAverageContribution()) per person</label>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label">
-                        Group Standings
-                    </label>
-                    <div class="controls">
-                        @{
-                            var standings = Model.GetGroupStanding();
-                            foreach (var person in standings.Keys)
-                            {
-                                <label class="control-label" style="text-align: left">@person.FirstName @person.LastName:</label><label class="pull-right">@string.Format(nfi, "{0:c}", standings[person])</label>
-                            }
-                        }
-                    </div>
-                </div>
-            </form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@ViewBag.Title</h1>
+            <ol class="breadcrumb">
+                <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
+                <li>@Html.ActionLink(Model.PeriodName, "Period", "Shopping", new {periodId = Model.PeriodId}, null)</li>
+                <li class="active">@Model.Name</li>
+            </ol>
         </div>
-        <div class="span3">
-            <h4 style="margin-left: 5px">Available People</h4>
-            <div class="listview grid-layout">
-                @foreach (var person in ViewBag.AvailablePeople)
-                {
-                    <div class="listview-item bg-color-blue" data-target="@Url.Action("AddContribution", "Shopping", new {personId = person.Id, groupId = Model.Id})">
-                        <div class="listview-item-object icon-user-2 pull-left"></div>
-                        <div class="listview-item-body">
-                            <h4 class="listview-item-heading">@person.FirstName @person.LastName</h4>
-                            <p class="two-lines"></p>
-                        </div>
-                    </div>
-                }
+    </div>
+    @Html.DisplayFor(m => m.Message)
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default" style="max-height: 400px; overflow: auto">
+                <div class="panel-heading">Available People</div>
+                <div class="list-group">
+                    @Html.DisplayFor(m => m.Available)
+                </div>
             </div>
         </div>
-        <div class="span3">
-            <h4 style="margin-left: 5px">Contributions</h4>
-            <div class="listview grid-layout">
-                @foreach (var contribution in Model.ShoppingContributions)
-                {
-                    <div class="listview-item bg-color-blue" data-val="@contribution.Id">
-                        <div class="listview-item-object icon-user-2 pull-left"></div>
-                        <div class="listview-item-body">
-                            <h4 class="listview-item-heading">@contribution.ShoppingPerson.FirstName @contribution.ShoppingPerson.LastName</h4>
-                            <p class="two-lines">@string.Format(nfi, "{0:c}", contribution.Amount)</p>
-                        </div>
-                    </div>
-                }
-            </div> 
+        <div class="col-md-3">
+            <div class="panel panel-default" style="max-height: 400px; overflow: auto">
+                <div class="panel-heading">Group Contributors</div>
+                <div class="list-group">
+                    @Html.DisplayFor(m => m.Contributions)
+                </div>
+            </div>
         </div>
-        <div class="span2"></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Group Details</div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("Group", "Shopping", FormMethod.Post, new {@class = "form-horizontal"}))
+                    {
+                        @Html.HiddenFor(m => m.GroupId)
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Name, new {@class = "control-label col-md-2"})
+                            <div class="col-md-10">
+                                @Html.EditorFor(m => m.Name, new {@class = "form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="icon-ok"></i>
+                                    Save Changes
+                                </button>
+                                <button id="btnReset" type="button" class="btn btn-default" data-target="@Html.Raw(Url.Action("Group", "Shopping", new {groupId = Model.GroupId}))">
+                                    Reset
+                                </button>
+                                <button id="btnDeleteGroup" type="button" class="btn btn-danger pull-right">
+                                    <i class="icon-remove"></i>
+                                    Delete Group
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span4 align-center">
-                <button id="btnDeleteGroup"  type="button" class="win-command">
-                    <span class="win-commandicon win-commandring icon-trash"></span>
-                    <span class="win-label">Delete Group</span>
+<div id="divDeleteGroup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Group</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you would like to delete this Shopping Group "@Model.Name"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="btnDeleteGroupConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeleteGroup", "Shopping", new {groupId = Model.GroupId, periodId = Model.PeriodId}))">
+                    <i class="icon-remove"></i>
+                    Delete
                 </button>
             </div>
-            <div class="span3 align-center">
-                <button type="button" class="win-command">
-                    <span class="win-commandicon win-commandring icon-users-2"></span>
-                    <span class="win-label">Manage Shoppers</span>
-                </button>
-            </div>
-            <div class="span5"></div>
         </div>
     </div>
-</footer>
-
-<div id="modalEditContribution"  class="modal hide fade">
-</div>
-
-<div id="modalDeleteGroup" class="modal message hide fade">
-    <div class="modal-header">
-         <h3>Delete Group</h3>
-      </div>
-      <div class="modal-body">
-         <p>Are you sure you want to delete the current group?</p>
-      </div>
-      <div class="modal-footer">
-          <button id="btnDeleteGroupConfirmed" class="btn btn-primary" data-target="@Url.Action("DeleteGroup", "Shopping", new {groupId = Model.Id})">Delete</button>
-          <button class="btn" data-dismiss="modal">Cancel</button>
-      </div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            //Hook up button events
+            $('#btnDeleteGroup').click(function() {
+                $('#divDeleteGroup').modal();
+            });
             $('[data-target]').click(function () {
                 window.location.href = $(this).data('target');
-            });
-            $('#btnDeleteGroup').click(function () {
-                $('#modalDeleteGroup').modal();
-            });
-            $('[data-val]').click(function() {
-                $('#modalEditContribution').load('@Url.Action("EditContribution", "Shopping")' + '?contributionId=' + $(this).data('val'), function() {
-                    $('[data-target]').click(function () {
-                        window.location.href = $(this).data('target');
-                    });
-                });
-                $('#modalEditContribution').modal();
             });
         });
     </script>

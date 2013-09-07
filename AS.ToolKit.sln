@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AS.ToolKit.Web", "AS.ToolKi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AS.ToolKit.Tests", "AS.ToolKit.Tests\AS.ToolKit.Tests.csproj", "{DFA5EDB9-9A89-428A-8C87-F1A75DBB106A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AS.ToolKit.Core", "AS.ToolKit.Core\AS.ToolKit.Core.csproj", "{EA9AF1D9-C90C-482A-9721-DB4A6003582F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AS.ToolKit.Data", "AS.ToolKit.Data\AS.ToolKit.Data.csproj", "{64D9C364-3094-4E35-93EE-04CFA78104D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{DFA5EDB9-9A89-428A-8C87-F1A75DBB106A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA5EDB9-9A89-428A-8C87-F1A75DBB106A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFA5EDB9-9A89-428A-8C87-F1A75DBB106A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9AF1D9-C90C-482A-9721-DB4A6003582F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9AF1D9-C90C-482A-9721-DB4A6003582F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9AF1D9-C90C-482A-9721-DB4A6003582F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9AF1D9-C90C-482A-9721-DB4A6003582F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64D9C364-3094-4E35-93EE-04CFA78104D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D9C364-3094-4E35-93EE-04CFA78104D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D9C364-3094-4E35-93EE-04CFA78104D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D9C364-3094-4E35-93EE-04CFA78104D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

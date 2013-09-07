@@ -1,61 +1,61 @@
 ﻿@{
     ViewBag.Title = "Shopping Calculator";
-    ViewBag.Back = Url.Action("Index", "Home");
+    ViewBag.Section = "Applications";
 }
 
-@using AS.ToolKit.Web.Models
-@model IEnumerable<AS.ToolKit.Web.Models.ShoppingPeriod>
+@using AS.ToolKit.Web.ViewModels
+@model AS.ToolKit.Web.ViewModels.IndexViewModel
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12">
-            <h4 style="margin-left: 5px">Shopping Periods</h4>
-            <div class="listview grid-layout">
-                @foreach (var period in Model)
-                {
-                    <div class="listview-item bg-color-blue" data-target="@Url.Action("Period", "Shopping", new {periodId = period.Id})">
-                        <div class="listview-item-object icon-calendar-3 pull-left"></div>
-                        <div class="listview-item-body">
-                            <h4 class="listview-item-heading">@period.End.ToString("MMMM yyyy")</h4>
-                            <p class="two-lines">@period.Start.ToString("dd MMMM") - @period.End.ToString("dd MMMM")</p>
-                        </div>
-                    </div>
-                }
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@ViewBag.Title</h1>
+            <ol class="breadcrumb">
+                <li class="active">Shopping Calculator</li>
+            </ol>
+        </div>
+    </div>
+    @Html.DisplayFor(m => m.Message)
+    @Html.HiddenFor(m => m.UserId)
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default" style="max-height: 400px; overflow: auto">
+                <div class="panel-heading">Shopping Intervals</div>
+                <div class="list-group">
+                    @Html.DisplayFor(m => m.Periods)
+                </div>
+            </div>
+            <button id="btnAddInterval" type="button" class="btn btn-success col-md-12">
+                <i class="icon-plus"></i>
+                Add New Interval
+            </button>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Overview</div>
+                <div class="panel-body">Cha</div>
             </div>
         </div>
     </div>
 </div>
 
-<footer class="win-commandlayout navbar-fixed-bottom win-ui-dark">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span12 align-center">
-                <button id="btnAddPeriod" type="button" class="win-command">
-                    <span class="win-commandicon win-commandring icon-plus"></span>
-                    <span class="win-label">Add</span>
-                </button>
-            </div>
-        </div>
+<div id="divAddInterval" class="modal fade">
+    <div class="modal-dialog">
+        @Html.Partial("_AddPeriod", new AddPeriodViewModel
+            {
+                UserId = Model.UserId,
+                Start = Model.DefaultStartDateString,
+                End = Model.DefaultEndDateString
+            })
     </div>
-</footer>
-
-<div id="modalAddPeriod" class="modal hide fade">
-    @Html.Partial("_AddPeriod", new ShoppingPeriod(ViewBag.DefaultStartDate, ViewBag.DefaultEndDate))
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function() {
-            //Hook up datepickers
-            $('.datepicker').datepicker({ format: 'dd-M-yyyy' });
-            
-            //Hook up button events
-            $('[data-target]').click(function () {
-                window.location.href = $(this).data('target');
-            });
-            $('#btnAddPeriod').click(function() {
-                $('#modalAddPeriod').modal();
+        $(document).ready(function () {
+            $('#btnAddInterval').click(function() {
+                $('#divAddInterval').modal();
             });
         });
     </script>

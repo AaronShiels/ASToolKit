@@ -1,6 +1,8 @@
 ﻿using System.Web.Mvc;
 using System.Composition.Convention;
 using System.Composition.Hosting;
+using AS.ToolKit.Data;
+using AS.ToolKit.Web.Extensions;
 using Alt.Composition.Convention;
 using Alt.Composition.Hosting;
 
@@ -11,12 +13,14 @@ namespace AS.ToolKit.Web.App_Start
         public static void Configure()
         {
             var conventions = new ConventionBuilder()
-                .WithMvcConventions();
+                .WithMvcConventions()
+                .WithPartsFolderConventions();
 
             var container = new ContainerConfiguration()
             .WithDefaultConventions(conventions)
             .WithApplicationSettings()
             .WithAssembly(typeof(MvcApplication).Assembly)
+            .WithAssembly(DataParts.Assembly)
             .CreateContainer();
 
             MvcCompositionProvider.Initialize(container);
