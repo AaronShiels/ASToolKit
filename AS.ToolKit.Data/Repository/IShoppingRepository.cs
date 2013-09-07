@@ -25,6 +25,8 @@ namespace AS.ToolKit.Data.Repository
         void UpdateContribution(int contrId, decimal amount);
         void DeleteContribution(int contrId);
 
+        ShoppingPerson GetPerson(int personId);
+
         IEnumerable<ShoppingPerson> GetAvailablePeopleByGroup(int groupId, int userId);
     }
 }

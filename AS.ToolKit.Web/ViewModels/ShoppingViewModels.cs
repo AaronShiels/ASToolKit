@@ -9,6 +9,8 @@ namespace AS.ToolKit.Web.ViewModels
         public string Heading { get; set; }
         public string Text { get; set; }
         public string Hyperlink { get; set; }
+        public string DataVal { get; set; }
+        public string IconClass { get; set; }
     }
 
     public class IndexViewModel
@@ -60,12 +62,15 @@ namespace AS.ToolKit.Web.ViewModels
     {
         public int GroupId { get; set; }
         public int PersonId { get; set; }
-        public decimal Amount { get; set; }
+        public string PersonName { get; set; }
+        public string Amount { get; set; }
     }
 
     public class EditContributionViewModel
     {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
+        public int ContrId { get; set; }
+        public int GroupId { get; set; }
+        public string PersonName { get; set; }
+        public string Amount { get; set; }
     }
 }

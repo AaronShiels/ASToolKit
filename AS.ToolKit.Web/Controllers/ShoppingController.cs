@@ -33,7 +33,8 @@ namespace AS.ToolKit.Web.Controllers
                         {
                             Heading = DateToName(p.End),
                             Text = p.Start.ToString("dd MMM") + " - " + p.End.ToString("dd MMM"),
-                            Hyperlink = Url.Action("Period", "Shopping", new {periodId = p.Id})
+                            Hyperlink = Url.Action("Period", "Shopping", new {periodId = p.Id}),
+                            IconClass = "icon-calendar"
                         }).ToList(),
                     DefaultStartDateString = highestEndDate.AddDays(1).ToString("dd-MMM-yyyy"),
                     DefaultEndDateString = DateTime.Today.ToString("dd-MMM-yyyy"),
@@ -76,7 +77,7 @@ namespace AS.ToolKit.Web.Controllers
             var period = _repo.GetPeriod(periodId);
             var model = new PeriodViewModel
                 {
-                    PeriodId = periodId,
+                    PeriodId = period.Id,
                     Name = DateToName(period.End),
                     CombinedTotal = string.Format(_nfi, "{0:c}", period.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount))),
                     Contributors = period.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))),
@@ -84,7 +85,8 @@ namespace AS.ToolKit.Web.Controllers
                         {
                             Heading = g.Name,
                             Text = string.Join(", ", g.ShoppingContributions.Select(c => c.ShoppingPerson.FirstName)),
-                            Hyperlink = Url.Action("Group", "Shopping", new {groupId = g.Id})
+                            Hyperlink = Url.Action("Group", "Shopping", new {groupId = g.Id}),
+                            IconClass = "icon-folder-open"
                         }).ToList(),
                     Start = period.Start.ToString("dd-MMM-yyyy"),
                     End = period.End.ToString("dd-MMM-yyyy"),
@@ -140,23 +142,29 @@ namespace AS.ToolKit.Web.Controllers
         public ViewResult Group(int groupId, string error)
         {
             var group = _repo.GetGroup(groupId);
+            var contributons = group.ShoppingContributions;
+            var availablePeople = _repo.GetAvailablePeopleByGroup(groupId, _userId).ToList();
+
             var model = new GroupViewModel
             {
                 PeriodId = group.ShoppingPeriod.Id,
                 PeriodName = DateToName(group.ShoppingPeriod.End),
                 GroupId = group.Id,
                 Name = group.Name,
-                Contributions = group.ShoppingContributions.Select(c => new SelectableItemViewModel
-                    {
-                        Heading = string.Format("{0} {1}", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName),
-                        Text = string.Join(", ", c.Amount.ToString("c")),
-                        Hyperlink = "#"
-                    }).ToList(),
-                Available = _repo.GetAvailablePeopleByGroup(groupId, _userId).Select(p => new SelectableItemViewModel
-                    {
-                        Heading = string.Format("{0} {1}", p.FirstName, p.LastName),
-                        Hyperlink = "#"
-                    }).ToList(),
+                Contributions = contributons.Select(c => new SelectableItemViewModel
+                {
+                    Heading = string.Format("{0} {1}", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName),
+                    Text = string.Format(_nfi, "{0:c}", c.Amount),
+                    DataVal = Url.Action("EditContribution", "Shopping", new { contrId = c.Id }),
+                    IconClass = "icon-user"
+                }),
+                Available = availablePeople.Select(p => new SelectableItemViewModel
+                {
+                    Heading = string.Format("{0} {1}", p.FirstName, p.LastName),
+                    Text = "Available",
+                    DataVal = Url.Action("AddContribution", "Shopping", new { groupId = group.Id, personId = p.Id }),
+                    IconClass = "icon-user"
+                }),
                 Message = new AlertMessage("", "", AlertMessage.Type.Hidden)
             };
 
@@ -189,42 +197,80 @@ namespace AS.ToolKit.Web.Controllers
 
             return RedirectToAction("Period", "Shopping", new {periodId = periodId});
         }
-        /*
-        public RedirectToRouteResult AddContribution(int personId, int groupId)
-        {
-            _db.ShoppingContributions.Add(new ShoppingContribution(personId, groupId));
-            _db.SaveChanges();
-
-            return RedirectToAction("Group", "Shopping", new {groupId});
-        }
 
         [HttpGet]
-        public PartialViewResult EditContribution(int contributionId)
+        public PartialViewResult AddContribution(int groupId, int personId)
         {
-            var contribution = _db.ShoppingContributions.SingleOrDefault(c => c.Id == contributionId);
+            var person = _repo.GetPerson(personId);
 
-            return PartialView("_EditContribution", contribution);
+            var model = new AddContributionViewModel
+                {
+                    GroupId = groupId,
+                    PersonId = personId,
+                    PersonName = string.Format("{0} {1}", person.FirstName, person.LastName),
+                    Amount = "0.00"
+                };
+
+            return PartialView("_AddContribution", model);
         }
 
         [HttpPost]
-        public RedirectToRouteResult EditContribution(ShoppingContribution contribution)
+        public RedirectToRouteResult AddContribution(AddContributionViewModel model)
         {
-            _db.ShoppingContributions.Attach(contribution);
-            _db.Entry(contribution).State = EntityState.Modified;
-            _db.SaveChanges();
+            decimal amount;
 
-            return RedirectToAction("Group", new { groupId = contribution.GroupId });
+            if (Decimal.TryParse(model.Amount, out amount))
+            {
+                _repo.CreateContribution(model.GroupId, model.PersonId, amount);
+
+                return RedirectToAction("Group", new { groupId = model.GroupId });
+            }
+            else
+            {
+                return RedirectToAction("Group", "Shopping", new { groupId = model.GroupId, error = string.Format("The amount you entered was invalid.") });
+            }
         }
 
-        public RedirectToRouteResult DeleteContribution(int contributionId)
+        [HttpGet]
+        public PartialViewResult EditContribution(int contrId)
         {
-            var contribution = _db.ShoppingContributions.SingleOrDefault(c => c.Id == contributionId);
-            _db.ShoppingContributions.Remove(contribution);
-            _db.SaveChanges();
+            var contr = _repo.GetContribution(contrId);
 
-            return RedirectToAction("Group", "Shopping", new { groupId = contribution.GroupId });
+            var model = new EditContributionViewModel
+            {
+                ContrId = contrId,
+                GroupId = contr.ShoppingGroup.Id,
+                PersonName = string.Format("{0} {1}", contr.ShoppingPerson.FirstName, contr.ShoppingPerson.LastName),
+                Amount = contr.Amount.ToString()
+            };
+
+            return PartialView("_EditContribution", model);
         }
 
+        [HttpPost]
+        public RedirectToRouteResult EditContribution(EditContributionViewModel model)
+        {
+            decimal amount;
+
+            if (Decimal.TryParse(model.Amount, out amount))
+            {
+                _repo.UpdateContribution(model.ContrId, amount);
+
+                return RedirectToAction("Group", new { groupId = model.ContrId });
+            }
+            else
+            {
+                return RedirectToAction("Group", "Shopping", new { groupId = model.GroupId, error = string.Format("The amount you entered was invalid.") });
+            }
+        }
+
+        public RedirectToRouteResult DeleteContribution(int contrId, int groupId)
+        {
+            _repo.DeleteContribution(contrId);
+
+            return RedirectToAction("Group", "Shopping", new {groupId = groupId});
+        }
+        /*        
         public ViewResult PrintPeriod(int periodId)
         {
             var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);

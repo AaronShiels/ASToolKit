@@ -18,7 +18,7 @@
     </div>
     @Html.DisplayFor(m => m.Message)
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="panel panel-default" style="max-height: 400px; overflow: auto">
                 <div class="panel-heading">Interval Groups</div>
                 <div class="list-group">
@@ -30,7 +30,7 @@
                 Add New Group
             </button>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Interval Details</div>
                 <div class="panel-body">
@@ -38,42 +38,42 @@
                     {
                         @Html.HiddenFor(m => m.PeriodId)
                         <div class="form-group">
-                            <label class="control-label col-md-2">Name</label>
-                            <div class="col-md-10">
+                            <label class="control-label col-md-3">Name</label>
+                            <div class="col-md-9">
                                 <label class="control-label control-label-detail">@Model.Name</label>
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.Start, new {@class = "control-label col-md-2"})
-                            <div class="col-md-10">
+                            @Html.LabelFor(m => m.Start, new {@class = "control-label col-md-3"})
+                            <div class="col-md-9">
                                 @Html.EditorFor(m => m.Start, new {@class = "form-control"})
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => m.End, new {@class = "control-label col-md-2"})
-                            <div class="col-md-10">
+                            @Html.LabelFor(m => m.End, new {@class = "control-label col-md-3"})
+                            <div class="col-md-9">
                                 @Html.EditorFor(m => m.End, new {@class = "form-control"})
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-2">Contributors</label>
-                            <div class="col-md-10">
+                            <label class="control-label col-md-3">Contributors</label>
+                            <div class="col-md-9">
                                 <label class="control-label control-label-detail">@string.Join(", ", Model.Contributors)</label>   
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-2">Total</label>
-                            <div class="col-md-10">
+                            <label class="control-label col-md-3">Total</label>
+                            <div class="col-md-9">
                                 <label class="control-label control-label-detail">@Model.CombinedTotal</label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
+                            <div class="col-md-12">
                                 <button type="submit" class="btn btn-success">
                                     <i class="icon-ok"></i>
                                     Save Changes
                                 </button>
-                                <button id="btnReset" type="button" class="btn btn-default">
+                                <button id="btnReset" type="button" class="btn btn-default" data-target="@Html.Raw(Url.Action("Period", "Shopping", new {periodId = Model.PeriodId}))">
                                     Reset
                                 </button>
                                 <button id="btnDeleteInterval" type="button" class="btn btn-danger pull-right">
@@ -112,7 +112,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Cancel
                 </button>
-                <button id="btnDeleteIntervalConfirmed" type="submit" class="btn btn-danger">
+                <button id="btnDeleteIntervalConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeletePeriod", "Shopping", new {periodId = Model.PeriodId}))">
                     <i class="icon-remove"></i>
                     Delete
                 </button>
@@ -131,11 +131,8 @@
             $('#btnDeleteInterval').click(function() {
                 $('#divDeleteInterval').modal();
             });
-            $('#btnReset').click(function () {
-                window.location.href = '@Url.Action("Period", "Shopping", new {periodId = Model.PeriodId})';
-            });
-            $('#btnDeleteIntervalConfirmed').click(function () {
-                window.location.href = '@Url.Action("DeletePeriod", "Shopping", new {periodId = Model.PeriodId})';
+            $('[data-target]').click(function () {
+                window.location.href = $(this).data('target');
             });
         });
     </script>

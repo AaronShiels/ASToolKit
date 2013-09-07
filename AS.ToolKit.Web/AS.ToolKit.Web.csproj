@@ -195,6 +195,8 @@
     <Content Include="Views\Shared\DisplayTemplates\AlertMessage.cshtml" />
     <Content Include="Views\Shopping\_AddGroup.cshtml" />
     <Content Include="Views\Shopping\Group.cshtml" />
+    <Content Include="Views\Shopping\_AddContribution.cshtml" />
+    <Content Include="Views\Shopping\_EditContribution.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

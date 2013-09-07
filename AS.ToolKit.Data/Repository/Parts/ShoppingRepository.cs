@@ -158,12 +158,21 @@ namespace AS.ToolKit.Data.Repository.Parts
             _db.SaveChanges();
         }
 
+        public ShoppingPerson GetPerson(int personId)
+        {
+            return _db.ShoppingPersons.Find(personId);
+        }
+
         public IEnumerable<ShoppingPerson> GetAvailablePeopleByGroup(int groupId, int userId)
         {
-            var people = _db.ShoppingPersons.Where(p => p.User.Id == userId);
+            return
+                _db.ShoppingPersons.Where(
+                    p => p.ShoppingContributions.All(c => c.ShoppingGroup.Id != groupId) && p.User.Id == userId);
+
+            /*var peopleIdList = _db.ShoppingPersons.Where(p => p.User.Id == userId).Select(p => p.Id);
             var group = _db.ShoppingGroups.Find(groupId);
 
-            return people.Where(person => !group.ShoppingContributions.Select(c => c.ShoppingPerson).Contains(person));
+            return people.Where(person => !group.ShoppingContributions.Select(c => c.ShoppingPerson.Id).Contains(person));*/
         }
     }
 }
