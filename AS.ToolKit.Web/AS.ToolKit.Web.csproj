@@ -140,7 +140,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Security\TempUser.cs" />
-    <Compile Include="Parts\ToolKitDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ApplicationViewModels.cs" />
     <Compile Include="ViewModels\SharedViewModels.cs" />
@@ -190,8 +189,8 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Shopping\Index.cshtml" />
     <Content Include="Views\Shopping\DisplayTemplates\SelectableItemViewModel.cshtml" />
-    <Content Include="Views\Shopping\Period.cshtml" />
-    <Content Include="Views\Shopping\_AddPeriod.cshtml" />
+    <Content Include="Views\Shopping\Interval.cshtml" />
+    <Content Include="Views\Shopping\_AddInterval.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\AlertMessage.cshtml" />
     <Content Include="Views\Shopping\_AddGroup.cshtml" />
     <Content Include="Views\Shopping\Group.cshtml" />

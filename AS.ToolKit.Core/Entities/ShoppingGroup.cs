@@ -9,7 +9,7 @@ namespace AS.ToolKit.Core.Entities
         public string Name { get; set; }
 
         public virtual ICollection<ShoppingContribution> ShoppingContributions { get; set; }
-        public virtual ShoppingPeriod ShoppingPeriod { get; set; }
+        public virtual ShoppingInterval ShoppingInterval { get; set; }
 
         public decimal GetAverageContribution()
         {

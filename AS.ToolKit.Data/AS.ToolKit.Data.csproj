@@ -63,10 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataParts.cs" />
-    <Compile Include="Repository\IShoppingRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\Parts\ShoppingRepository.cs" />
-    <Compile Include="Repository\Parts\ToolKitDb.cs" />
+    <Compile Include="Repositories\Parts\ShoppingRepository.cs" />
+    <Compile Include="Context\ToolKitDbContext.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

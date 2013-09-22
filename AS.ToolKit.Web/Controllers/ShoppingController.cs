@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using AS.ToolKit.Data.Repository;
+using AS.ToolKit.Core.Repositories;
 using AS.ToolKit.Web.ViewModels;
 
 namespace AS.ToolKit.Web.Controllers
@@ -24,16 +24,16 @@ namespace AS.ToolKit.Web.Controllers
 
         public ViewResult Index(string error)
         {
-            var periods = _repo.GetPeriods(_userId).ToList();
-            var highestEndDate = periods.Any() ? periods.Max(p => p.End) : DateTime.Today.AddDays(-8);
+            var intervals = _repo.Intervals.GetByUser(_userId).ToList();
+            var highestEndDate = intervals.Any() ? intervals.Max(p => p.End) : DateTime.Today.AddDays(-8);
             var model = new IndexViewModel
                 {
                     UserId = _userId,
-                    Periods = periods.Select(p => new SelectableItemViewModel
+                    Intervals = intervals.Select(p => new SelectableItemViewModel
                         {
                             Heading = DateToName(p.End),
                             Text = p.Start.ToString("dd MMM") + " - " + p.End.ToString("dd MMM"),
-                            Hyperlink = Url.Action("Period", "Shopping", new {periodId = p.Id}),
+                            Hyperlink = Url.Action("Interval", "Shopping", new {intervalId = p.Id}),
                             IconClass = "icon-calendar"
                         }).ToList(),
                     DefaultStartDateString = highestEndDate.AddDays(1).ToString("dd-MMM-yyyy"),
@@ -56,13 +56,13 @@ namespace AS.ToolKit.Web.Controllers
 
         
         [HttpPost]
-        public RedirectToRouteResult AddPeriod(AddPeriodViewModel model)
+        public RedirectToRouteResult AddInterval(AddIntervalViewModel model)
         {
             DateTime dateStart, dateEnd;
 
             if (DateTime.TryParse(model.Start, out dateStart) && DateTime.TryParse(model.End, out dateEnd))
             {
-                _repo.CreatePeriod(model.UserId, dateStart, dateEnd);
+                _repo.Intervals.Create(model.UserId, dateStart, dateEnd);
 
                 return RedirectToAction("Index");
             }
@@ -72,24 +72,24 @@ namespace AS.ToolKit.Web.Controllers
             }
         }
         
-        public ViewResult Period(int periodId, string error)
+        public ViewResult Interval(int intervalId, string error)
         {
-            var period = _repo.GetPeriod(periodId);
-            var model = new PeriodViewModel
+            var interval = _repo.Intervals.Get(intervalId);
+            var model = new IntervalViewModel
                 {
-                    PeriodId = period.Id,
-                    Name = DateToName(period.End),
-                    CombinedTotal = string.Format(_nfi, "{0:c}", period.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount))),
-                    Contributors = period.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))),
-                    Groups = period.ShoppingGroups.Select(g => new SelectableItemViewModel
+                    IntervalId = interval.Id,
+                    Name = DateToName(interval.End),
+                    CombinedTotal = string.Format(_nfi, "{0:c}", interval.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount))),
+                    Contributors = interval.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))),
+                    Groups = interval.ShoppingGroups.Select(g => new SelectableItemViewModel
                         {
                             Heading = g.Name,
                             Text = string.Join(", ", g.ShoppingContributions.Select(c => c.ShoppingPerson.FirstName)),
                             Hyperlink = Url.Action("Group", "Shopping", new {groupId = g.Id}),
                             IconClass = "icon-folder-open"
                         }).ToList(),
-                    Start = period.Start.ToString("dd-MMM-yyyy"),
-                    End = period.End.ToString("dd-MMM-yyyy"),
+                    Start = interval.Start.ToString("dd-MMM-yyyy"),
+                    End = interval.End.ToString("dd-MMM-yyyy"),
                     Message = new AlertMessage("", "", AlertMessage.Type.Hidden)
                 };
 
@@ -102,25 +102,25 @@ namespace AS.ToolKit.Web.Controllers
         }
         
         [HttpPost]
-        public RedirectToRouteResult Period(PeriodViewModel model)
+        public RedirectToRouteResult Interval(IntervalViewModel model)
         {
             DateTime dateStart, dateEnd;
 
             if (DateTime.TryParse(model.Start, out dateStart) && DateTime.TryParse(model.End, out dateEnd))
             {
-                _repo.UpdatePeriod(model.PeriodId, dateStart, dateEnd);
+                _repo.Intervals.Update(model.IntervalId, dateStart, dateEnd);
 
-                return RedirectToAction("Period", new { periodId = model.PeriodId });
+                return RedirectToAction("Interval", new { intervalId = model.IntervalId });
             }
             else
             {
-                return RedirectToAction("Period", "Shopping", new { periodId = model.PeriodId, error = string.Format("The dates you provided were invalid: '{0}' '{1}'", model.Start, model.End) });
+                return RedirectToAction("Interval", "Shopping", new { intervalId = model.IntervalId, error = string.Format("The dates you provided were invalid: '{0}' '{1}'", model.Start, model.End) });
             }
         }
 
-        public RedirectToRouteResult DeletePeriod(int periodId)
+        public RedirectToRouteResult DeleteInterval(int intervalId)
         {
-            _repo.DeletePeriod(periodId);
+            _repo.Intervals.Delete(intervalId);
 
             return RedirectToAction("Index");
         }
@@ -129,26 +129,26 @@ namespace AS.ToolKit.Web.Controllers
         {
             if (!string.IsNullOrEmpty(model.Name))
             {
-                _repo.CreateGroup(model.PeriodId, model.Name);
+                _repo.Groups.Create(model.IntervalId, model.Name);
 
-                return RedirectToAction("Period", new {periodId = model.PeriodId});
+                return RedirectToAction("Interval", new { intervalId = model.IntervalId });
             }
             else
             {
-                return RedirectToAction("Period", "Shopping", new { periodId = model.PeriodId, error = string.Format("The name you provided was empty.") });
+                return RedirectToAction("Interval", "Shopping", new { intervalId = model.IntervalId, error = string.Format("The name you provided was empty.") });
             }
         }
 
         public ViewResult Group(int groupId, string error)
         {
-            var group = _repo.GetGroup(groupId);
+            var group = _repo.Groups.Get(groupId);
             var contributons = group.ShoppingContributions;
-            var availablePeople = _repo.GetAvailablePeopleByGroup(groupId, _userId).ToList();
+            var availablePeople = _repo.People.GetAvailablesByGroup(groupId, _userId).ToList();
 
             var model = new GroupViewModel
             {
-                PeriodId = group.ShoppingPeriod.Id,
-                PeriodName = DateToName(group.ShoppingPeriod.End),
+                IntervalId = group.ShoppingInterval.Id,
+                IntervalName = DateToName(group.ShoppingInterval.End),
                 GroupId = group.Id,
                 Name = group.Name,
                 Contributions = contributons.Select(c => new SelectableItemViewModel
@@ -181,7 +181,7 @@ namespace AS.ToolKit.Web.Controllers
         {
             if (!string.IsNullOrEmpty(model.Name))
             {
-                _repo.UpdateGroup(model.GroupId, model.Name);
+                _repo.Groups.Update(model.GroupId, model.Name);
 
                 return RedirectToAction("Group", new {groupId = model.GroupId});
             }
@@ -191,17 +191,17 @@ namespace AS.ToolKit.Web.Controllers
             }
         }
 
-        public RedirectToRouteResult DeleteGroup(int groupId, int periodId)
+        public RedirectToRouteResult DeleteGroup(int groupId, int intervalId)
         {
-            _repo.DeleteGroup(groupId);
+            _repo.Groups.Delete(groupId);
 
-            return RedirectToAction("Period", "Shopping", new {periodId = periodId});
+            return RedirectToAction("Interval", "Shopping", new { intervalId = intervalId });
         }
 
         [HttpGet]
         public PartialViewResult AddContribution(int groupId, int personId)
         {
-            var person = _repo.GetPerson(personId);
+            var person = _repo.People.Get(personId);
 
             var model = new AddContributionViewModel
                 {
@@ -221,7 +221,7 @@ namespace AS.ToolKit.Web.Controllers
 
             if (Decimal.TryParse(model.Amount, out amount))
             {
-                _repo.CreateContribution(model.GroupId, model.PersonId, amount);
+                _repo.Contributions.Create(model.GroupId, model.PersonId, amount);
 
                 return RedirectToAction("Group", new { groupId = model.GroupId });
             }
@@ -234,7 +234,7 @@ namespace AS.ToolKit.Web.Controllers
         [HttpGet]
         public PartialViewResult EditContribution(int contrId)
         {
-            var contr = _repo.GetContribution(contrId);
+            var contr = _repo.Contributions.Get(contrId);
 
             var model = new EditContributionViewModel
             {
@@ -254,7 +254,7 @@ namespace AS.ToolKit.Web.Controllers
 
             if (Decimal.TryParse(model.Amount, out amount))
             {
-                _repo.UpdateContribution(model.ContrId, amount);
+                _repo.Contributions.Update(model.ContrId, amount);
 
                 return RedirectToAction("Group", new { groupId = model.ContrId });
             }
@@ -266,7 +266,7 @@ namespace AS.ToolKit.Web.Controllers
 
         public RedirectToRouteResult DeleteContribution(int contrId, int groupId)
         {
-            _repo.DeleteContribution(contrId);
+            _repo.Contributions.Delete(contrId);
 
             return RedirectToAction("Group", "Shopping", new {groupId = groupId});
         }

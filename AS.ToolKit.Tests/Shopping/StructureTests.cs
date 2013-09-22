@@ -9,7 +9,7 @@ namespace AS.ToolKit.Tests.Shopping
     [TestFixture]
     public class StructureTests
     {
-        private ShoppingPeriod _period;
+        private ShoppingInterval _interval;
         private ShoppingGroup _groupA;
         private ShoppingGroup _groupB;
         private ShoppingPerson _pAaron;
@@ -53,8 +53,8 @@ namespace AS.ToolKit.Tests.Shopping
                     ShoppingContributions = new List<ShoppingContribution>()
                 };
 
-            //Period
-            _period = new ShoppingPeriod
+            //Interval
+            _interval = new ShoppingInterval
                 {
                     Id = 1,
                     Start = new DateTime(2013,1,1),
@@ -66,14 +66,14 @@ namespace AS.ToolKit.Tests.Shopping
             _groupA = new ShoppingGroup
             {
                 Id = 1,
-                ShoppingPeriod = _period,
+                ShoppingInterval = _interval,
                 ShoppingContributions = new List<ShoppingContribution>()
             };
 
             _groupB = new ShoppingGroup
             {
                 Id = 2,
-                ShoppingPeriod = _period,
+                ShoppingInterval = _interval,
                 ShoppingContributions = new List<ShoppingContribution>()
             };
 
@@ -144,8 +144,8 @@ namespace AS.ToolKit.Tests.Shopping
             _pThom.ShoppingContributions.Add(contributionF);
             _groupB.ShoppingContributions.Add(contributionG);
             _pBen.ShoppingContributions.Add(contributionG);
-            _period.ShoppingGroups.Add(_groupA);
-            _period.ShoppingGroups.Add(_groupB);
+            _interval.ShoppingGroups.Add(_groupA);
+            _interval.ShoppingGroups.Add(_groupB);
         }
 
         [Test]
@@ -182,16 +182,16 @@ namespace AS.ToolKit.Tests.Shopping
         }
 
         [Test]
-        public void PeriodSpending()
+        public void IntervalSpending()
         {
-            var spending = _period.ShoppingGroups.Sum(x => x.ShoppingContributions.Sum(c => c.Amount));
+            var spending = _interval.ShoppingGroups.Sum(x => x.ShoppingContributions.Sum(c => c.Amount));
             Assert.AreEqual(1277, spending);
         }
 
         [Test]
-        public void PeriodTotalContributions()
+        public void IntervalTotalContributions()
         {
-            var totalCont = _period.GetTotalContributions();
+            var totalCont = _interval.GetTotalContributions();
             Assert.AreEqual(485, Math.Round(totalCont[_pAaron]));
             Assert.AreEqual(649, Math.Round(totalCont[_pBill]));
             Assert.AreEqual(143, Math.Round(totalCont[_pThom]));
@@ -199,9 +199,9 @@ namespace AS.ToolKit.Tests.Shopping
         }
 
         [Test]
-        public void PeriodStandings()
+        public void IntervalStandings()
         {
-            var standings = _period.GetTotalStanding();
+            var standings = _interval.GetTotalStanding();
             Assert.AreEqual(82, Math.Round(standings[_pAaron]));
             Assert.AreEqual(-260, Math.Round(standings[_pThom]));
             Assert.AreEqual(246, Math.Round(standings[_pBill]));

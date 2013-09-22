@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AS.ToolKit.Core.Entities;
 
-namespace AS.ToolKit.Web.Infrastructure.Calculation
+namespace AS.ToolKit.Core.Calculations
 {
     public class OweGraph
     {

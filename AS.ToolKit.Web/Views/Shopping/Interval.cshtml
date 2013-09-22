@@ -4,7 +4,7 @@
 }
 
 @using AS.ToolKit.Web.ViewModels
-@model AS.ToolKit.Web.ViewModels.PeriodViewModel
+@model AS.ToolKit.Web.ViewModels.IntervalViewModel
 
 <div class="container">
     <div class="row">
@@ -34,9 +34,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Interval Details</div>
                 <div class="panel-body">
-                    @using (Html.BeginForm("Period", "Shopping", FormMethod.Post, new {@class = "form-horizontal"}))
+                    @using (Html.BeginForm("Interval", "Shopping", FormMethod.Post, new {@class = "form-horizontal"}))
                     {
-                        @Html.HiddenFor(m => m.PeriodId)
+                        @Html.HiddenFor(m => m.IntervalId)
                         <div class="form-group">
                             <label class="control-label col-md-3">Name</label>
                             <div class="col-md-9">
@@ -73,7 +73,7 @@
                                     <i class="icon-ok"></i>
                                     Save Changes
                                 </button>
-                                <button id="btnReset" type="button" class="btn btn-default" data-target="@Html.Raw(Url.Action("Period", "Shopping", new {periodId = Model.PeriodId}))">
+                                <button id="btnReset" type="button" class="btn btn-default" data-target="@Html.Raw(Url.Action("Interval", "Shopping", new {intervalId = Model.IntervalId}))">
                                     Reset
                                 </button>
                                 <button id="btnDeleteInterval" type="button" class="btn btn-danger pull-right">
@@ -93,7 +93,7 @@
     <div class="modal-dialog">
         @Html.Partial("_AddGroup", new AddGroupViewModel
             {
-                PeriodId = Model.PeriodId
+                IntervalId = Model.IntervalId
             })
     </div>
 </div>
@@ -112,7 +112,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Cancel
                 </button>
-                <button id="btnDeleteIntervalConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeletePeriod", "Shopping", new {periodId = Model.PeriodId}))">
+                <button id="btnDeleteIntervalConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeleteInterval", "Shopping", new {intervalId = Model.IntervalId}))">
                     <i class="icon-remove"></i>
                     Delete
                 </button>

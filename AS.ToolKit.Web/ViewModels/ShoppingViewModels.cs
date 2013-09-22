@@ -16,15 +16,15 @@ namespace AS.ToolKit.Web.ViewModels
     public class IndexViewModel
     {
         public int UserId { get; set; }
-        public IEnumerable<SelectableItemViewModel> Periods { get; set; }
+        public IEnumerable<SelectableItemViewModel> Intervals { get; set; }
         public string DefaultStartDateString { get; set; }
         public string DefaultEndDateString { get; set; }
         public AlertMessage Message { get; set; }
     }
 
-    public class PeriodViewModel
+    public class IntervalViewModel
     {
-        public int PeriodId { get; set; }
+        public int IntervalId { get; set; }
         public string Name { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
@@ -36,8 +36,8 @@ namespace AS.ToolKit.Web.ViewModels
 
     public class GroupViewModel
     {
-        public int PeriodId { get; set; }
-        public string PeriodName { get; set; }
+        public int IntervalId { get; set; }
+        public string IntervalName { get; set; }
         public int GroupId { get; set; }
         public string Name { get; set; }
         public IEnumerable<SelectableItemViewModel> Contributions { get; set; }
@@ -45,7 +45,7 @@ namespace AS.ToolKit.Web.ViewModels
         public AlertMessage Message { get; set; }
     }
 
-    public class AddPeriodViewModel
+    public class AddIntervalViewModel
     {
         public int UserId { get; set; }
         public string Start { get; set; }
@@ -54,7 +54,7 @@ namespace AS.ToolKit.Web.ViewModels
 
     public class AddGroupViewModel
     {
-        public int PeriodId { get; set; }
+        public int IntervalId { get; set; }
         public string Name { get; set; }
     }
 

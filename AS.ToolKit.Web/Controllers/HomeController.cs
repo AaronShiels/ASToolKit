@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using AS.ToolKit.Data.Repository;
-using AS.ToolKit.Web.Parts;
+using AS.ToolKit.Core.Repositories;
 using AS.ToolKit.Web.ViewModels;
 
 namespace AS.ToolKit.Web.Controllers
@@ -42,7 +41,7 @@ namespace AS.ToolKit.Web.Controllers
                             Id = 1,
                             Name = "Shopping Calculator",
                             Description = "Calculates debts and repayment plans in group contribution situations",
-                            Blurb = "<p>Have you ever entered into complex group shopping agreements? Have you found it difficult to work out who has to pay who to ensure everyone contributed the same amount?</p><p>Shopping Calculator can handle endless individual contributions over any given time period, and can also roll-up simultaneous contribution groups into a single aggregate result.</p><p>This result is transformed into a payment plan using an efficiency algorithm to ensure minimal transactions need occur to reach evenness among the group/s.</p>",
+                            Blurb = "<p>Have you ever entered into complex group shopping agreements? Have you found it difficult to work out who has to pay who to ensure everyone contributed the same amount?</p><p>Shopping Calculator can handle endless individual contributions over any given time interval, and can also roll-up simultaneous contribution groups into a single aggregate result.</p><p>This result is transformed into a payment plan using an efficiency algorithm to ensure minimal transactions need occur to reach evenness among the group/s.</p>",
                             UrlPath="/Shopping",
                             IconCss = "icon-shopping-cart"
                         },

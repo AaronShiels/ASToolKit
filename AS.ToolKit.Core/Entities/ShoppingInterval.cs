@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AS.ToolKit.Web.Infrastructure.Calculation;
+using AS.ToolKit.Core.Calculations;
 
 namespace AS.ToolKit.Core.Entities
 {
-    public class ShoppingPeriod
+    public class ShoppingInterval
     {
         public int Id { get; set; }
         public DateTime Start { get; set; }

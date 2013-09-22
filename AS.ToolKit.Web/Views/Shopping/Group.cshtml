@@ -12,7 +12,7 @@
             <h1>@ViewBag.Title</h1>
             <ol class="breadcrumb">
                 <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
-                <li>@Html.ActionLink(Model.PeriodName, "Period", "Shopping", new {periodId = Model.PeriodId}, null)</li>
+                <li>@Html.ActionLink(Model.IntervalName, "Interval", "Shopping", new {intervalId = Model.IntervalId}, null)</li>
                 <li class="active">@Model.Name</li>
             </ol>
         </div>
@@ -90,7 +90,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Cancel
                 </button>
-                <button id="btnDeleteGroupConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeleteGroup", "Shopping", new {groupId = Model.GroupId, periodId = Model.PeriodId}))">
+                <button id="btnDeleteGroupConfirmed" type="submit" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeleteGroup", "Shopping", new {groupId = Model.GroupId, intervalId = Model.IntervalId}))">
                     <i class="icon-remove"></i>
                     Delete
                 </button>

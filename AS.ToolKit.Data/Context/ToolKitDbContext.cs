@@ -1,19 +1,23 @@
-﻿using System.Composition;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using AS.ToolKit.Core.Entities;
-using Alt.Composition;
 
-namespace AS.ToolKit.Data.Repository.Parts
+namespace AS.ToolKit.Data.Context
 {
-    public class ToolKitDb : DbContext
+    public class ToolKitDbContext : DbContext
     {
-        public ToolKitDb()
+        static ToolKitDbContext()
+        {
+            //Database.SetInitializer<ToolKitDbContext>(null);
+        }
+
+        public ToolKitDbContext()
             : base("ToolKitDbConnection")
         {
+            
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<ShoppingPeriod> ShoppingPeriods { get; set; }
+        public DbSet<ShoppingInterval> ShoppingIntervals { get; set; }
         public DbSet<ShoppingPerson> ShoppingPersons { get; set; }
         public DbSet<ShoppingGroup> ShoppingGroups { get; set; }
         public DbSet<ShoppingContribution> ShoppingContributions { get; set; }

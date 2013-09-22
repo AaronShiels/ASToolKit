@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AS.ToolKit.Core.Calculations;
 using AS.ToolKit.Core.Entities;
-using AS.ToolKit.Web.Infrastructure.Calculation;
 using NUnit.Framework;
 
 namespace AS.ToolKit.Tests.Shopping

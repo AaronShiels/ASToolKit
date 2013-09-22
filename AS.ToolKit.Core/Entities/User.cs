@@ -8,7 +8,7 @@ namespace AS.ToolKit.Core.Entities
         public string Username { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<ShoppingPeriod> ShoppingPeriods { get; set; }
+        public virtual ICollection<ShoppingInterval> ShoppingIntervals { get; set; }
         public virtual ICollection<ShoppingPerson> ShoppingPersons { get; set; } 
     }
 }

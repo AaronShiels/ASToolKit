@@ -22,7 +22,7 @@
             <div class="panel panel-default" style="max-height: 400px; overflow: auto">
                 <div class="panel-heading">Shopping Intervals</div>
                 <div class="list-group">
-                    @Html.DisplayFor(m => m.Periods)
+                    @Html.DisplayFor(m => m.Intervals)
                 </div>
             </div>
             <button id="btnAddInterval" type="button" class="btn btn-success col-md-12">
@@ -41,7 +41,7 @@
 
 <div id="divAddInterval" class="modal fade">
     <div class="modal-dialog">
-        @Html.Partial("_AddPeriod", new AddPeriodViewModel
+        @Html.Partial("_AddInterval", new AddIntervalViewModel
             {
                 UserId = Model.UserId,
                 Start = Model.DefaultStartDateString,
