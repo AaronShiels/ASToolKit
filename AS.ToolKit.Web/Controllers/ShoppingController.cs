@@ -24,17 +24,25 @@ namespace AS.ToolKit.Web.Controllers
 
         public ViewResult Index(string error)
         {
-            var intervals = _repo.Intervals.GetByUser(_userId).ToList();
+            var intervals = _repo.Intervals.GetAllByUser(_userId).ToList();
+            var people = _repo.People.GetAllByUser(_userId).ToList();
             var highestEndDate = intervals.Any() ? intervals.Max(p => p.End) : DateTime.Today.AddDays(-8);
             var model = new IndexViewModel
                 {
                     UserId = _userId,
-                    Intervals = intervals.Select(p => new SelectableItemViewModel
+                    Intervals = intervals.Select(i => new SelectableItemViewModel
                         {
-                            Heading = DateToName(p.End),
-                            Text = p.Start.ToString("dd MMM") + " - " + p.End.ToString("dd MMM"),
-                            Hyperlink = Url.Action("Interval", "Shopping", new {intervalId = p.Id}),
+                            Heading = DateToName(i.End),
+                            Text = i.Start.ToString("dd MMM") + " - " + i.End.ToString("dd MMM"),
+                            Hyperlink = Url.Action("Interval", "Shopping", new {intervalId = i.Id}),
                             IconClass = "icon-calendar"
+                        }).ToList(),
+                    People = people.Select(p => new SelectableItemViewModel
+                        {
+                            Heading = p.FirstName + " " + p.LastName,
+                            Text = string.Format("{0} total contributions made", p.ShoppingContributions.Count()),
+                            Hyperlink = "#", //TODO: Url.Action("Person", "Shopping", new {personId = p.Id})
+                            IconClass = "icon-user"
                         }).ToList(),
                     DefaultStartDateString = highestEndDate.AddDays(1).ToString("dd-MMM-yyyy"),
                     DefaultEndDateString = DateTime.Today.ToString("dd-MMM-yyyy"),
@@ -71,6 +79,21 @@ namespace AS.ToolKit.Web.Controllers
                 return RedirectToAction("Index", "Shopping", new { error = string.Format("The dates you provided were invalid: '{0}' '{1}'", model.Start, model.End) });
             }
         }
+
+        [HttpPost]
+        public RedirectToRouteResult AddPerson(AddPersonViewModel model)
+        {
+            if (!string.IsNullOrEmpty(model.FirstName) && !string.IsNullOrEmpty(model.LastName))
+            {
+                _repo.People.Create(model.UserId, model.FirstName, model.LastName);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Shopping", new { error = string.Format("The name you provided was incomplete: '{0}' '{1}'", model.FirstName, model.LastName) });
+            }
+        }
         
         public ViewResult Interval(int intervalId, string error)
         {
@@ -80,7 +103,7 @@ namespace AS.ToolKit.Web.Controllers
                     IntervalId = interval.Id,
                     Name = DateToName(interval.End),
                     CombinedTotal = string.Format(_nfi, "{0:c}", interval.ShoppingGroups.Sum(g => g.ShoppingContributions.Sum(c => c.Amount))),
-                    Contributors = interval.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))),
+                    Contributors = interval.ShoppingGroups.SelectMany(g => g.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName))).Distinct(),
                     Groups = interval.ShoppingGroups.Select(g => new SelectableItemViewModel
                         {
                             Heading = g.Name,
@@ -142,7 +165,6 @@ namespace AS.ToolKit.Web.Controllers
         public ViewResult Group(int groupId, string error)
         {
             var group = _repo.Groups.Get(groupId);
-            var contributons = group.ShoppingContributions;
             var availablePeople = _repo.People.GetAvailablesByGroup(groupId, _userId).ToList();
 
             var model = new GroupViewModel
@@ -151,7 +173,9 @@ namespace AS.ToolKit.Web.Controllers
                 IntervalName = DateToName(group.ShoppingInterval.End),
                 GroupId = group.Id,
                 Name = group.Name,
-                Contributions = contributons.Select(c => new SelectableItemViewModel
+                Total = string.Format(_nfi, "{0:c}", group.ShoppingContributions.Sum(c => c.Amount)),
+                Contributors = group.ShoppingContributions.Select(c => string.Join(" ", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName)),
+                Contributions = group.ShoppingContributions.Select(c => new SelectableItemViewModel
                 {
                     Heading = string.Format("{0} {1}", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName),
                     Text = string.Format(_nfi, "{0:c}", c.Amount),
@@ -277,5 +301,11 @@ namespace AS.ToolKit.Web.Controllers
 
             return View(period);
         }*/
+
+        [HttpGet]
+        public ViewResult Person(int personid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

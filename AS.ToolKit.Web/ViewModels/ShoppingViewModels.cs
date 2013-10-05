@@ -17,6 +17,7 @@ namespace AS.ToolKit.Web.ViewModels
     {
         public int UserId { get; set; }
         public IEnumerable<SelectableItemViewModel> Intervals { get; set; }
+        public IEnumerable<SelectableItemViewModel> People { get; set; } 
         public string DefaultStartDateString { get; set; }
         public string DefaultEndDateString { get; set; }
         public AlertMessage Message { get; set; }
@@ -40,6 +41,8 @@ namespace AS.ToolKit.Web.ViewModels
         public string IntervalName { get; set; }
         public int GroupId { get; set; }
         public string Name { get; set; }
+        public IEnumerable<string> Contributors { get; set; }
+        public string Total { get; set; }
         public IEnumerable<SelectableItemViewModel> Contributions { get; set; }
         public IEnumerable<SelectableItemViewModel> Available { get; set; }
         public AlertMessage Message { get; set; }
@@ -50,6 +53,13 @@ namespace AS.ToolKit.Web.ViewModels
         public int UserId { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
+    }
+
+    public class AddPersonViewModel
+    {
+        public int UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class AddGroupViewModel

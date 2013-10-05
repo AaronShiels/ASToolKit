@@ -22,7 +22,7 @@ namespace AS.ToolKit.Data.Repositories.Parts
             return _db.ShoppingIntervals.Find(intervalId);
         }
 
-        public IEnumerable<ShoppingInterval> GetByUser(int userId)
+        public IEnumerable<ShoppingInterval> GetAllByUser(int userId)
         {
             return _db.ShoppingIntervals.Where(p => p.User.Id == userId).OrderBy(p => p.End);
         }
@@ -182,11 +182,32 @@ namespace AS.ToolKit.Data.Repositories.Parts
             return _db.ShoppingPersons.Find(personId);
         }
 
+        public IEnumerable<ShoppingPerson> GetAllByUser(int userId)
+        {
+            return _db.ShoppingPersons.Where(p => p.User.Id == userId);
+        }
+
         public IEnumerable<ShoppingPerson> GetAvailablesByGroup(int groupId, int userId)
         {
             return
                  _db.ShoppingPersons.Where(
                      p => p.ShoppingContributions.All(c => c.ShoppingGroup.Id != groupId) && p.User.Id == userId);
+        }
+
+        public ShoppingPerson Create(int userId, string firstName, string lastName)
+        {
+            var user = _db.Users.Find(userId);
+            var newPerson = new ShoppingPerson
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                User = user
+            };
+
+            _db.ShoppingPersons.Add(newPerson);
+            _db.SaveChanges();
+
+            return newPerson;
         }
     }
 

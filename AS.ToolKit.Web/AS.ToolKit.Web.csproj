@@ -196,6 +196,7 @@
     <Content Include="Views\Shopping\Group.cshtml" />
     <Content Include="Views\Shopping\_AddContribution.cshtml" />
     <Content Include="Views\Shopping\_EditContribution.cshtml" />
+    <Content Include="Views\Shopping\_AddPerson.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

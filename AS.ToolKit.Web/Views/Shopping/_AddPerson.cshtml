@@ -1,6 +1,6 @@
-﻿@model AS.ToolKit.Web.ViewModels.AddIntervalViewModel
+﻿@model AS.ToolKit.Web.ViewModels.AddPersonViewModel
 
-@using (Html.BeginForm("AddInterval", "Shopping", FormMethod.Post, new {@class="form-horizontal"}))
+@using (Html.BeginForm("AddPerson", "Shopping", FormMethod.Post, new {@class="form-horizontal"}))
 {
     <div class="modal-content">
         <div class="modal-header">
@@ -10,15 +10,15 @@
         <div class="modal-body">
             @Html.HiddenFor(m => m.UserId)
             <div class="form-group">
-                @Html.LabelFor(m => m.Start, new {@class="control-label col-md-4"})
+                @Html.LabelFor(m => m.FirstName, new {@class="control-label col-md-4"})
                 <div class="col-md-8">
-                    @Html.EditorFor(m => m.Start, new {@class="form-control"})
+                    @Html.EditorFor(m => m.FirstName, new {@class="form-control"})
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.End, new {@class="control-label col-md-4"})
+                @Html.LabelFor(m => m.LastName, new {@class="control-label col-md-4"})
                 <div class="col-md-8">
-                    @Html.EditorFor(m => m.End, new {@class="form-control"})
+                    @Html.EditorFor(m => m.LastName, new {@class="form-control"})
                 </div>
             </div>  
         </div>

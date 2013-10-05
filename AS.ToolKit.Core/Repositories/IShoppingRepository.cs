@@ -15,7 +15,7 @@ namespace AS.ToolKit.Core.Repositories
     public interface IShoppingIntervalRepository
     {
         ShoppingInterval Get(int intervalId);
-        IEnumerable<ShoppingInterval> GetByUser(int userId);
+        IEnumerable<ShoppingInterval> GetAllByUser(int userId);
         ShoppingInterval Create(int userId, DateTime start, DateTime end);
         void Update(int intervalId, DateTime start, DateTime end);
         void Delete(int intervalId);
@@ -43,6 +43,8 @@ namespace AS.ToolKit.Core.Repositories
     public interface IShoppingPersonRepository
     {
         ShoppingPerson Get(int personId);
+        IEnumerable<ShoppingPerson> GetAllByUser(int userId);
         IEnumerable<ShoppingPerson> GetAvailablesByGroup(int groupId, int userId);
+        ShoppingPerson Create(int userId, string firstName, string lastName);
     }
 }

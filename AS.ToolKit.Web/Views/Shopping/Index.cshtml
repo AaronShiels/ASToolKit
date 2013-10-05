@@ -25,16 +25,22 @@
                     @Html.DisplayFor(m => m.Intervals)
                 </div>
             </div>
-            <button id="btnAddInterval" type="button" class="btn btn-success col-md-12">
+            <button id="btnAddInterval" type="button" class="btn btn-primary col-md-12">
                 <i class="icon-plus"></i>
                 Add New Interval
             </button>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Overview</div>
-                <div class="panel-body">Cha</div>
+                <div class="panel-heading">Shoppers</div>
+                <div class="list-group">
+                    @Html.DisplayFor(m => m.People)
+                </div>
             </div>
+            <button id="btnAddPerson" type="button" class="btn btn-primary col-md-12">
+                <i class="icon-plus"></i>
+                Add New Person
+            </button>
         </div>
     </div>
 </div>
@@ -50,12 +56,24 @@
     </div>
 </div>
 
+<div id="divAddPerson" class="modal fade">
+    <div class="modal-dialog">
+        @Html.Partial("_AddPerson", new AddPersonViewModel
+            {
+                UserId = Model.UserId,
+            })
+    </div>
+</div>
+
 @section scripts
 {
     <script type="text/javascript">
         $(document).ready(function () {
             $('#btnAddInterval').click(function() {
                 $('#divAddInterval').modal();
+            });
+            $('#btnAddPerson').click(function () {
+                $('#divAddPerson').modal();
             });
         });
     </script>
