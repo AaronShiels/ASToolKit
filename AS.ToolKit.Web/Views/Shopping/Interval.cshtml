@@ -9,7 +9,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>@ViewBag.Title</h1>
+            <div class="page-header">
+                <h1>@ViewBag.Title
+                    <small>
+                        @Model.Name
+                    </small>
+                </h1>
+            </div>
             <ol class="breadcrumb">
                 <li>@Html.ActionLink("Shopping Calculator", "Index", "Shopping")</li>
                 <li class="active">@Model.Name</li>
