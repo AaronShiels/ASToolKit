@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations\OweGraph.cs" />
+    <Compile Include="Calculations\EntityAggregation.cs" />
     <Compile Include="Entities\ShoppingContribution.cs" />
     <Compile Include="Entities\ShoppingGroup.cs" />
     <Compile Include="Entities\ShoppingInterval.cs" />

@@ -4,15 +4,6 @@ using AS.ToolKit.Core.Entities;
 
 namespace AS.ToolKit.Web.ViewModels
 {
-    public class SelectableItemViewModel
-    {
-        public string Heading { get; set; }
-        public string Text { get; set; }
-        public string Hyperlink { get; set; }
-        public string DataVal { get; set; }
-        public string IconClass { get; set; }
-    }
-
     public class ShoppingIndexViewModel
     {
         public int UserId { get; set; }
@@ -89,5 +80,43 @@ namespace AS.ToolKit.Web.ViewModels
         public int GroupId { get; set; }
         public string PersonName { get; set; }
         public string Amount { get; set; }
+    }
+
+    public class PrintableShoppingIntervalViewModel
+    {
+        public string Name { get; set; }
+        public string Start { get; set; }
+        public string End { get; set; }
+        public IEnumerable<GroupSummary> GroupSummaries { get; set; }
+        public IEnumerable<PersonSummary> PersonSummaries { get; set; }
+        public IEnumerable<RepaymentSummary> RepaymentSummaries { get; set; }
+
+        public class RepaymentSummary
+        {
+            public string GiverName { get; set; }
+            public string ReceiverName { get; set; }
+            public string Amount { get; set; }
+        }
+
+        public class PersonSummary
+        {
+            public string Name { get; set; }
+            public string TotalContributionAmount { get; set; }
+            public string TotalFinancialStanding { get; set; }
+        }
+
+        public class GroupSummary
+        {
+            public string Name { get; set; }
+            public string AverageContribution { get; set; }
+            public IEnumerable<ContributionSummary> ContributionSummaries { get; set; }
+
+            public class ContributionSummary
+            {
+                public string ContributorName { get; set; }
+                public string Amount { get; set; }
+                public string FinancialStanding { get; set; }
+            }
+        }
     }
 }

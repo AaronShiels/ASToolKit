@@ -7,10 +7,5 @@
 
         public virtual ShoppingGroup ShoppingGroup { get; set; }
         public virtual ShoppingPerson ShoppingPerson { get; set; }
-
-        public ShoppingContribution()
-        {
-            
-        }
     }
 }

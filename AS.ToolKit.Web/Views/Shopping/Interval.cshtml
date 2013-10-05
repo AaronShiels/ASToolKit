@@ -85,6 +85,10 @@
                     }
                 </div>
             </div>
+            <button id="btnPrintReport" type="submit" class="btn btn-primary col-md-12" data-target="@Html.Raw(Url.Action("PrintInterval", "Shopping", new {intervalId = Model.IntervalId}))">
+                <i class="icon-print"></i>
+                Print Summary Report
+            </button>
         </div>
     </div>
 </div>

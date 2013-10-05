@@ -198,6 +198,7 @@
     <Content Include="Views\Shopping\_EditContribution.cshtml" />
     <Content Include="Views\Shopping\_AddPerson.cshtml" />
     <Content Include="Views\Shopping\_EditPerson.cshtml" />
+    <Content Include="Views\Shopping\PrintInterval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

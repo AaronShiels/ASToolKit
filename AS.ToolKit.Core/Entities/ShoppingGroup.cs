@@ -10,35 +10,5 @@ namespace AS.ToolKit.Core.Entities
 
         public virtual ICollection<ShoppingContribution> ShoppingContributions { get; set; }
         public virtual ShoppingInterval ShoppingInterval { get; set; }
-
-        public decimal GetAverageContribution()
-        {
-            if (ShoppingContributions.Count > 0)
-            {
-                return ShoppingContributions.Sum(x => x.Amount)/ShoppingContributions.Count;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        public Dictionary<ShoppingPerson, decimal> GetGroupStanding()
-        {
-            var standingDict = new Dictionary<ShoppingPerson, decimal>();
-
-            var requiredAverage = GetAverageContribution();
-            foreach (var contr in ShoppingContributions)
-            {
-                if (!standingDict.ContainsKey(contr.ShoppingPerson))
-                {
-                    standingDict.Add(contr.ShoppingPerson, 0);
-                }
-                standingDict[contr.ShoppingPerson] = contr.Amount - requiredAverage;
-            }
-
-            return standingDict;
-        }
-
     }
 }

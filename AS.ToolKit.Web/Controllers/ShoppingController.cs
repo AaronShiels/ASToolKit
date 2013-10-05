@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using AS.ToolKit.Core.Calculations;
+using AS.ToolKit.Core.Entities;
 using AS.ToolKit.Core.Repositories;
 using AS.ToolKit.Web.ViewModels;
 
@@ -294,13 +297,6 @@ namespace AS.ToolKit.Web.Controllers
 
             return RedirectToAction("Group", "Shopping", new {groupId = groupId});
         }
-        /*        
-        public ViewResult PrintPeriod(int periodId)
-        {
-            var period = _db.ShoppingPeriods.SingleOrDefault(p => p.Id == periodId);
-
-            return View(period);
-        }*/
 
         [HttpGet]
         public PartialViewResult EditPerson(int personId)
@@ -339,6 +335,47 @@ namespace AS.ToolKit.Web.Controllers
             _repo.People.Delete(personId);
 
             return RedirectToAction("Index");
+        }
+
+        public ViewResult PrintInterval(int intervalId)
+        {
+            var interval = _repo.Intervals.Get(intervalId);
+            var totalContributionsDictionary = EntityAggregation.GetTotalContributions(interval);
+            var totalStandingsDictionary = EntityAggregation.GetTotalStandings(interval);
+            var vectorGraph = new OweGraph(totalStandingsDictionary);
+            vectorGraph.Simplify();
+
+            var model = new PrintableShoppingIntervalViewModel
+                {
+                    Name = DateToName(interval.End),
+                    Start = interval.Start.ToString("dd-MMM"),
+                    End = interval.End.ToString("dd-MMM"),
+                    GroupSummaries = interval.ShoppingGroups.Select(g => new PrintableShoppingIntervalViewModel.GroupSummary
+                        {
+                           Name = g.Name,
+                           AverageContribution = string.Format(_nfi, "{0:c}", EntityAggregation.GetSafeAverage(g.ShoppingContributions.Sum(c => c.Amount), g.ShoppingContributions.Count)),
+                           ContributionSummaries = g.ShoppingContributions.Select(c => new PrintableShoppingIntervalViewModel.GroupSummary.ContributionSummary
+                               {
+                                   ContributorName = string.Format("{0} {1}", c.ShoppingPerson.FirstName, c.ShoppingPerson.LastName),
+                                   Amount = string.Format(_nfi, "{0:c}", c.Amount),
+                                   FinancialStanding = string.Format(_nfi, "{0:c}", c.Amount - EntityAggregation.GetSafeAverage(g.ShoppingContributions.Sum(ctr => ctr.Amount), g.ShoppingContributions.Count))
+                               })
+                        }),
+                    PersonSummaries = totalContributionsDictionary.Keys.Select(p => new PrintableShoppingIntervalViewModel.PersonSummary
+                        {
+                            Name = string.Format("{0} {1}", p.FirstName, p.LastName),
+                            TotalContributionAmount = string.Format(_nfi, "{0:c}", totalContributionsDictionary[p]),
+                            TotalFinancialStanding = string.Format(_nfi, "{0:c}", totalStandingsDictionary[p])
+                        }),
+                    RepaymentSummaries = vectorGraph.GetVectors().Select(v => new PrintableShoppingIntervalViewModel.RepaymentSummary
+                        {
+                            GiverName = string.Format("{0} {1}", v.Giver.FirstName, v.Giver.LastName),
+                            ReceiverName = string.Format("{0} {1}", v.Receiver.FirstName, v.Receiver.LastName),
+                            Amount = string.Format(_nfi, "{0:c}", v.Amount)
+                        })
+                };
+
+            return View(model);
         }
     }
 }
