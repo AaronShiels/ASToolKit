@@ -4,7 +4,7 @@
 }
 
 @using AS.ToolKit.Web.ViewModels
-@model AS.ToolKit.Web.ViewModels.IntervalViewModel
+@model AS.ToolKit.Web.ViewModels.ShoppingIntervalViewModel
 
 <div class="container">
     <div class="row">
@@ -91,7 +91,7 @@
 
 <div id="divAddGroup" class="modal fade">
     <div class="modal-dialog">
-        @Html.Partial("_AddGroup", new AddGroupViewModel
+        @Html.Partial("_AddGroup", new AddShoppingGroupViewModel
             {
                 IntervalId = Model.IntervalId
             })

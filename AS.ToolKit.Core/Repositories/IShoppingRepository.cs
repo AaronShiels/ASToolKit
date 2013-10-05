@@ -46,5 +46,7 @@ namespace AS.ToolKit.Core.Repositories
         IEnumerable<ShoppingPerson> GetAllByUser(int userId);
         IEnumerable<ShoppingPerson> GetAvailablesByGroup(int groupId, int userId);
         ShoppingPerson Create(int userId, string firstName, string lastName);
+        void Update(int personId, string firstName, string lastName);
+        void Delete(int personId);
     }
 }

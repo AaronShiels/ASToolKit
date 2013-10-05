@@ -27,7 +27,7 @@ namespace AS.ToolKit.Web.Controllers
             var intervals = _repo.Intervals.GetAllByUser(_userId).OrderByDescending(i => i.End).ToList();
             var people = _repo.People.GetAllByUser(_userId).ToList();
             var highestEndDate = intervals.Any() ? intervals.Max(p => p.End) : DateTime.Today.AddDays(-8);
-            var model = new IndexViewModel
+            var model = new ShoppingIndexViewModel
                 {
                     UserId = _userId,
                     Intervals = intervals.Select(i => new SelectableItemViewModel
@@ -41,7 +41,7 @@ namespace AS.ToolKit.Web.Controllers
                         {
                             Heading = p.FirstName + " " + p.LastName,
                             Text = string.Format("{0} total contributions made", p.ShoppingContributions.Count()),
-                            Hyperlink = "#", //TODO: Url.Action("Person", "Shopping", new {personId = p.Id})
+                            DataVal = Url.Action("EditPerson", "Shopping", new {personId = p.Id}),
                             IconClass = "icon-user"
                         }).ToList(),
                     DefaultStartDateString = highestEndDate.AddDays(1).ToString("dd-MMM-yyyy"),
@@ -64,7 +64,7 @@ namespace AS.ToolKit.Web.Controllers
 
         
         [HttpPost]
-        public RedirectToRouteResult AddInterval(AddIntervalViewModel model)
+        public RedirectToRouteResult AddInterval(AddShoppingIntervalViewModel model)
         {
             DateTime dateStart, dateEnd;
 
@@ -81,7 +81,7 @@ namespace AS.ToolKit.Web.Controllers
         }
 
         [HttpPost]
-        public RedirectToRouteResult AddPerson(AddPersonViewModel model)
+        public RedirectToRouteResult AddPerson(AddShoppingPersonViewModel model)
         {
             if (!string.IsNullOrEmpty(model.FirstName) && !string.IsNullOrEmpty(model.LastName))
             {
@@ -98,7 +98,7 @@ namespace AS.ToolKit.Web.Controllers
         public ViewResult Interval(int intervalId, string error)
         {
             var interval = _repo.Intervals.Get(intervalId);
-            var model = new IntervalViewModel
+            var model = new ShoppingIntervalViewModel
                 {
                     IntervalId = interval.Id,
                     Name = DateToName(interval.End),
@@ -125,7 +125,7 @@ namespace AS.ToolKit.Web.Controllers
         }
         
         [HttpPost]
-        public RedirectToRouteResult Interval(IntervalViewModel model)
+        public RedirectToRouteResult Interval(ShoppingIntervalViewModel model)
         {
             DateTime dateStart, dateEnd;
 
@@ -148,7 +148,7 @@ namespace AS.ToolKit.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public RedirectToRouteResult AddGroup(AddGroupViewModel model)
+        public RedirectToRouteResult AddGroup(AddShoppingGroupViewModel model)
         {
             if (!string.IsNullOrEmpty(model.Name))
             {
@@ -167,7 +167,7 @@ namespace AS.ToolKit.Web.Controllers
             var group = _repo.Groups.Get(groupId);
             var availablePeople = _repo.People.GetAvailablesByGroup(groupId, _userId).ToList();
 
-            var model = new GroupViewModel
+            var model = new ShoppingGroupViewModel
             {
                 IntervalId = group.ShoppingInterval.Id,
                 IntervalName = DateToName(group.ShoppingInterval.End),
@@ -201,7 +201,7 @@ namespace AS.ToolKit.Web.Controllers
         }
 
         [HttpPost]
-        public RedirectToRouteResult Group(GroupViewModel model)
+        public RedirectToRouteResult Group(ShoppingGroupViewModel model)
         {
             if (!string.IsNullOrEmpty(model.Name))
             {
@@ -227,7 +227,7 @@ namespace AS.ToolKit.Web.Controllers
         {
             var person = _repo.People.Get(personId);
 
-            var model = new AddContributionViewModel
+            var model = new AddShoppingContributionViewModel
                 {
                     GroupId = groupId,
                     PersonId = personId,
@@ -239,7 +239,7 @@ namespace AS.ToolKit.Web.Controllers
         }
 
         [HttpPost]
-        public RedirectToRouteResult AddContribution(AddContributionViewModel model)
+        public RedirectToRouteResult AddContribution(AddShoppingContributionViewModel model)
         {
             decimal amount;
 
@@ -260,7 +260,7 @@ namespace AS.ToolKit.Web.Controllers
         {
             var contr = _repo.Contributions.Get(contrId);
 
-            var model = new EditContributionViewModel
+            var model = new EditShoppingContributionViewModel
             {
                 ContrId = contrId,
                 GroupId = contr.ShoppingGroup.Id,
@@ -272,7 +272,7 @@ namespace AS.ToolKit.Web.Controllers
         }
 
         [HttpPost]
-        public RedirectToRouteResult EditContribution(EditContributionViewModel model)
+        public RedirectToRouteResult EditContribution(EditShoppingContributionViewModel model)
         {
             decimal amount;
 
@@ -280,7 +280,7 @@ namespace AS.ToolKit.Web.Controllers
             {
                 _repo.Contributions.Update(model.ContrId, amount);
 
-                return RedirectToAction("Group", new { groupId = model.ContrId });
+                return RedirectToAction("Group", new { groupId = model.GroupId });
             }
             else
             {
@@ -303,9 +303,42 @@ namespace AS.ToolKit.Web.Controllers
         }*/
 
         [HttpGet]
-        public ViewResult Person(int personid)
+        public PartialViewResult EditPerson(int personId)
         {
-            throw new NotImplementedException();
+            var person = _repo.People.Get(personId);
+
+            var model = new EditShoppingPersonViewModel
+            {
+                PersonId = personId,
+                FirstName = person.FirstName,
+                LastName = person.LastName
+            };
+
+            return PartialView("_EditPerson", model);
+        }
+
+        [HttpPost]
+        public RedirectToRouteResult EditPerson(EditShoppingPersonViewModel model)
+        {
+            decimal amount;
+
+            if (!string.IsNullOrEmpty(model.FirstName) && !string.IsNullOrEmpty(model.LastName))
+            {
+                _repo.People.Update(model.PersonId, model.FirstName, model.LastName);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Shopping", new { error = string.Format("The name you provided was incomplete: '{0}' '{1}'", model.FirstName, model.LastName) });
+            }
+        }
+
+        public RedirectToRouteResult DeletePerson(int personId)
+        {
+            _repo.People.Delete(personId);
+
+            return RedirectToAction("Index");
         }
     }
 }

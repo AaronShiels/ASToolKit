@@ -4,7 +4,7 @@
 }
 
 @using AS.ToolKit.Web.ViewModels
-@model AS.ToolKit.Web.ViewModels.IndexViewModel
+@model AS.ToolKit.Web.ViewModels.ShoppingIndexViewModel
 
 <div class="container">
     <div class="row">
@@ -47,7 +47,7 @@
 
 <div id="divAddInterval" class="modal fade">
     <div class="modal-dialog">
-        @Html.Partial("_AddInterval", new AddIntervalViewModel
+        @Html.Partial("_AddInterval", new AddShoppingIntervalViewModel
             {
                 UserId = Model.UserId,
                 Start = Model.DefaultStartDateString,
@@ -58,10 +58,16 @@
 
 <div id="divAddPerson" class="modal fade">
     <div class="modal-dialog">
-        @Html.Partial("_AddPerson", new AddPersonViewModel
+        @Html.Partial("_AddPerson", new AddShoppingPersonViewModel
             {
                 UserId = Model.UserId,
             })
+    </div>
+</div>
+
+<div id="divEditPerson" class="modal fade">
+    <div class="modal-dialog">
+        
     </div>
 </div>
 
@@ -74,6 +80,18 @@
             });
             $('#btnAddPerson').click(function () {
                 $('#divAddPerson').modal();
+            });
+            $('[data-target]').click(function () {
+                window.location.href = $(this).data('target');
+            });
+            $('a[data-val]').click(function () {
+                var hyper = $(this).data('val');
+                $('#divEditPerson > .modal-dialog').load(hyper, function () {
+                    $('#divEditPerson').modal();
+                    $('[data-target]').click(function () {
+                        window.location.href = $(this).data('target');
+                    });
+                });
             });
         });
     </script>

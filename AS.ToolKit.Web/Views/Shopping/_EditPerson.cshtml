@@ -1,24 +1,24 @@
-﻿@model AS.ToolKit.Web.ViewModels.EditShoppingContributionViewModel
+﻿@model AS.ToolKit.Web.ViewModels.EditShoppingPersonViewModel
 
-@using (Html.BeginForm("EditContribution", "Shopping", FormMethod.Post, new {@class="form-horizontal"}))
+@using (Html.BeginForm("EditPerson", "Shopping", FormMethod.Post, new {@class="form-horizontal"}))
 {
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Edit Contribution</h4>
+            <h4 class="modal-title">Edit Person</h4>
         </div>
         <div class="modal-body">
-            @Html.HiddenFor(m => m.ContrId)
+            @Html.HiddenFor(m => m.PersonId)
             <div class="form-group">
-                <label class="control-label col-md-4">Person</label>
+                @Html.LabelFor(m => m.FirstName, new {@class="control-label col-md-4"})
                 <div class="col-md-8">
-                    <label class="control-label control-label-detail">@Model.PersonName</label>
+                    @Html.EditorFor(m => m.FirstName, new {@class="form-control"})
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Amount, new {@class="control-label col-md-4"})
+                @Html.LabelFor(m => m.LastName, new {@class="control-label col-md-4"})
                 <div class="col-md-8">
-                    @Html.EditorFor(m => m.Amount, new {@class="form-control"})
+                    @Html.EditorFor(m => m.LastName, new {@class="form-control"})
                 </div>
             </div>
         </div>
@@ -30,12 +30,10 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">
                 Close
             </button>
-            <button type="button" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeleteContribution", "Shopping", new {contrId = Model.ContrId, groupId = Model.GroupId}))">
+            <button type="button" class="btn btn-danger" data-target="@Html.Raw(Url.Action("DeletePerson", "Shopping", new {personId = Model.PersonId}))">
                 <i class="icon-remove"></i>
                 Delete
             </button>
         </div>
     </div>
-    
-    
 }

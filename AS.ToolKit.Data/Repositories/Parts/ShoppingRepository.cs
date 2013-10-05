@@ -209,6 +209,21 @@ namespace AS.ToolKit.Data.Repositories.Parts
 
             return newPerson;
         }
+
+        public void Update(int personId, string firstName, string lastName)
+        {
+            var person = _db.ShoppingPersons.Find(personId);
+            person.FirstName = firstName;
+            person.LastName = lastName;
+            _db.SaveChanges();
+        }
+
+        public void Delete(int personId)
+        {
+            var person = _db.ShoppingPersons.Find(personId);
+            _db.ShoppingPersons.Remove(person);
+            _db.SaveChanges();
+        }
     }
 
     public class ShoppingRepository : IShoppingRepository, IDisposable

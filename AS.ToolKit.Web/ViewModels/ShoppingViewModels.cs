@@ -13,7 +13,7 @@ namespace AS.ToolKit.Web.ViewModels
         public string IconClass { get; set; }
     }
 
-    public class IndexViewModel
+    public class ShoppingIndexViewModel
     {
         public int UserId { get; set; }
         public IEnumerable<SelectableItemViewModel> Intervals { get; set; }
@@ -23,7 +23,7 @@ namespace AS.ToolKit.Web.ViewModels
         public AlertMessage Message { get; set; }
     }
 
-    public class IntervalViewModel
+    public class ShoppingIntervalViewModel
     {
         public int IntervalId { get; set; }
         public string Name { get; set; }
@@ -35,7 +35,7 @@ namespace AS.ToolKit.Web.ViewModels
         public AlertMessage Message { get; set; }
     }
 
-    public class GroupViewModel
+    public class ShoppingGroupViewModel
     {
         public int IntervalId { get; set; }
         public string IntervalName { get; set; }
@@ -48,27 +48,34 @@ namespace AS.ToolKit.Web.ViewModels
         public AlertMessage Message { get; set; }
     }
 
-    public class AddIntervalViewModel
+    public class AddShoppingIntervalViewModel
     {
         public int UserId { get; set; }
         public string Start { get; set; }
         public string End { get; set; }
     }
 
-    public class AddPersonViewModel
+    public class AddShoppingPersonViewModel
     {
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
 
-    public class AddGroupViewModel
+    public class EditShoppingPersonViewModel
+    {
+        public int PersonId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    public class AddShoppingGroupViewModel
     {
         public int IntervalId { get; set; }
         public string Name { get; set; }
     }
 
-    public class AddContributionViewModel
+    public class AddShoppingContributionViewModel
     {
         public int GroupId { get; set; }
         public int PersonId { get; set; }
@@ -76,7 +83,7 @@ namespace AS.ToolKit.Web.ViewModels
         public string Amount { get; set; }
     }
 
-    public class EditContributionViewModel
+    public class EditShoppingContributionViewModel
     {
         public int ContrId { get; set; }
         public int GroupId { get; set; }
