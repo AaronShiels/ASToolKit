@@ -24,7 +24,7 @@ namespace AS.ToolKit.Web.Controllers
 
         public ViewResult Index(string error)
         {
-            var intervals = _repo.Intervals.GetAllByUser(_userId).ToList();
+            var intervals = _repo.Intervals.GetAllByUser(_userId).OrderByDescending(i => i.End).ToList();
             var people = _repo.People.GetAllByUser(_userId).ToList();
             var highestEndDate = intervals.Any() ? intervals.Max(p => p.End) : DateTime.Today.AddDays(-8);
             var model = new IndexViewModel
