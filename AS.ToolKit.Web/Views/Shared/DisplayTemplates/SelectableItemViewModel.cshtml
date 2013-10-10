@@ -1,6 +1,6 @@
 ﻿@model AS.ToolKit.Web.ViewModels.SelectableItemViewModel
 
-<a href="@((string.IsNullOrEmpty(Model.DataVal)) ? Model.Hyperlink : "#")" class="list-group-item" @((!string.IsNullOrEmpty(Model.DataVal)) ? "data-val=\"" + Model.DataVal + "\"" : "")>
+<a href="@((string.IsNullOrEmpty(Model.DataVal)) ? Model.Hyperlink : "#")" class="list-group-item" @((!string.IsNullOrEmpty(Model.DataVal)) ? string.Format("data-val={0}", Model.DataVal) : "")>
     <i class="@Model.IconClass pull-left icon-3x"></i>
     <h4 class="list-group-item-heading">@Model.Heading</h4>
     <p class="list-group-item-text">@Model.Text &nbsp;</p>
