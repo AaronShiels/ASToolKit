@@ -25,9 +25,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="@Url.Action("Index", "Home")">Home</a></li>
-                    <li><a href="@Url.Action("Index", "BudgetTracker")">About</a></li>
-                    <li><a href="@Url.ACtion("Index", "RoutineBuilder")">Contact</a></li>
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("Index", "BudgetTracker")">Budget Tracker</a></li>
+                    <li><a href="@Url.Action("Index", "RoutineBuilder")">Routine Builder</a></li>
                 </ul>
             </div>
         </div>
@@ -41,6 +41,11 @@
     </div>
     @Scripts.Render("~/bundles/scripts")
     <script type="text/javascript" src="~/Scripts/angular.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('a:contains("@ViewBag.Section")').closest('li').addClass('active');
+        });
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
