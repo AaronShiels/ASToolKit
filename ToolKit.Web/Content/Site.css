@@ -5,7 +5,11 @@
 @-o-viewport        { width: device-width; }
 @viewport           { width: device-width; }
 
-
 body {
     padding-top: 60px;
+}
+
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
 }
