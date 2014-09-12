@@ -10,7 +10,8 @@ namespace ToolKit.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/scripts")
                 .Include("~/Scripts/jquery-{version}.js")
-                .Include("~/Scripts/bootstrap.js"));
+                .Include("~/Scripts/bootstrap.js")
+                .Include("~/Scripts/site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap.css")
