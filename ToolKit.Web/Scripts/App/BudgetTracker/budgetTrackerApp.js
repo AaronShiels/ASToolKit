@@ -1,11 +1,11 @@
 ﻿var app = angular.module('budgetTrackerApp', []);
 
 app.value('Frequencies', {
-    weekly: 'weekly',
-    fortnightly: 'fortnightly',
-    monthly: 'monthly',
-    halfYearly: 'halfYearly',
-    yearly: 'yearly'
+    weekly: 'Weekly',
+    fortnightly: 'Fortnightly',
+    monthly: 'Monthly',
+    halfYearly: 'Half yearly',
+    yearly: 'Yearly'
 });
 
 app.factory('Bill', function (Frequencies) {
@@ -17,6 +17,17 @@ app.factory('Bill', function (Frequencies) {
     }
 
     return (Bill);
+});
+
+app.factory('Cost', function (Frequencies) {
+    function Cost(name, amount, frequency, resets) {
+        this.name = name;
+        this.amount = amount;
+        this.frequency = frequency;
+        this.resets = resets;
+    }
+
+    return (Cost);
 });
 
 app.factory('Income', function (Frequencies) {
