@@ -3,9 +3,63 @@
     ViewBag.Title = "Budget Tracker";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <h1>@ViewBag.Title</h1>
-        <hr />
+<div ng-app="budgetTrackerApp" ng-controller="budgetTrackerController">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@ViewBag.Title <small>{{today | date:'dd MMM yyyy'}}</small></h1>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Incomings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Frequency</th>
+                        <th>Next Due (approx.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="income in incomes">
+                        <td>{{income.name}}</td>
+                        <td>{{income.amount | currency}}</td>
+                        <td>{{income.frequency}}</td>
+                        <td>{{income.nextDue | date:'dd MMM yyyy'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Outgoings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Frequency</th>
+                        <th>Next Due (approx.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="bill in bills">
+                        <td>{{bill.name}}</td>
+                        <td>{{bill.amount | currency}}</td>
+                        <td>{{bill.frequency}}</td>
+                        <td>{{bill.nextDue | date:'dd MMM yyyy'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="~/Scripts/App/BudgetTracker/budgetTrackerApp.js"></script>
+    <script src="~/Scripts/App/BudgetTracker/budgetTrackerController.js"></script>
+}
