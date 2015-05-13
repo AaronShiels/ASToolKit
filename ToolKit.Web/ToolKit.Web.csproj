@@ -192,6 +192,7 @@
     <Content Include="Scripts\jquery-1.9.0.min.map" />
     <Content Include="Views\BudgetTracker\Index.cshtml" />
     <Content Include="Views\RoutineBuilder\Index.cshtml" />
+    <Content Include="Views\Home\Offers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

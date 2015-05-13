@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Section = "Home";
+    ViewBag.Title = "Active Offer";
+}
+
+<div class="jumbotron">
+    <h1>
+        <i class="glyphicon glyphicon-exclamation-sign"></i> @ViewBag.Title
+    </h1>
+    <p class="lead">OMG! Your offer expires in: <span id="timer"></span></p>
+    <button type="button" id="pay" class="btn btn-lg btn-primary">
+        <i class="glyphicon glyphicon-usd"></i> Give Monies
+    </button>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            updateTimer();
+            setInterval(updateTimer, 1000);
+
+            $('#pay').click(function() {
+                alert('yay!');
+            });
+        });
+        
+        function updateTimer() {
+            var currentTime = new Date();
+            var targetTime = new Date('2015/05/13 17:00:00');
+
+            var diff = targetTime.getTime() - currentTime.getTime();
+            var hrs = Math.floor(diff / (1000 * 60 * 60));
+            var mins = Math.floor(diff / (1000 * 60)) - (hrs * 60);
+            var secs = Math.floor(diff / (1000)) - (mins * 60) - (hrs * 60 * 60);
+
+            $('#timer').html(hrs + ':' + mins + ':' + secs);
+        }
+    </script>
+}
